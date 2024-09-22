@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=krita_popup
+X-Python-2-Compatible=false
+X-Krita-Manual=Manual.html
+Name=Krita Popup
+Comment=Display a configurable popup under cursor or at specific locations for less hand movements.
