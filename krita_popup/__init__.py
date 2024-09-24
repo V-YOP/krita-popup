@@ -1,1 +1,2 @@
-from .krita_popup import *
+from krita_popup.KritaPopupExtension import *
+from krita_popup.RealPopup import KritaPopup

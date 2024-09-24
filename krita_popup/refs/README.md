@@ -1,1 +1,1 @@
-docker names, i18n, menu structure...helpful for development but not necessary.
+docker names, i18n, menu structure, all actions...helpful for development but not necessary.
