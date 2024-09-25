@@ -15,7 +15,6 @@ class KritaDockBorrower(QWidget):
         super().__init__(None)
         self.__borrowed_widget = None
         self.__dock_widget = dock_widget
-        self.setMinimumSize(100, 100) # 给定一个基准大小
         self.__placeholder = QLabel('Borrowed')
         self.__placeholder.setObjectName('BORROWED')
         self.destroyed.connect(self.return_back)
@@ -33,9 +32,10 @@ class KritaDockBorrower(QWidget):
         self.__dock_widget.setWidget(self.__placeholder)
         self.__borrowed_widget.setParent(self)
         qInfo(f'{self.__borrowed_widget.geometry()=}')
-        self.__borrowed_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # self.__borrowed_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.__borrowed_widget.setGeometry(self.rect())
         self.__borrowed_widget.show()
-        self.adjustSize()
+        # self.adjustSize()
         self.show()
 
     def return_back(self):
@@ -44,6 +44,12 @@ class KritaDockBorrower(QWidget):
         self.__dock_widget.setWidget(self.__borrowed_widget)
         self.__borrowed_widget = None
         self.hide()
+
+    def on_show(self):
+        self.borrow()
+
+    def on_hide(self):
+        self.return_back()
         
 if __name__ == '__main__':
     from krita_popup.popup import Popup

@@ -14,5 +14,6 @@ for file in Path(__file__).parent.iterdir():
     if file.name.startswith('_'):
         continue
     module_name = file.with_suffix('').name
-    importlib.import_module(module_name, __package__)
+    print('import', module_name, __package__)
+    importlib.import_module(f'{__package__}.{module_name}')
 

@@ -23,7 +23,7 @@ def RegistItem(name: str, config_class: type):
         raise RuntimeError(f'duplicate item name {name}')
     
     assert isinstance(config_class, type) and is_dataclass(config_class), f'{config_class} must be a dataclass'
-    def go(registed_class: type): 
+    def go(registed_class): 
         _items[name] = (config_class, registed_class)
         return registed_class
     return go

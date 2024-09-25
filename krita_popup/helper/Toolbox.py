@@ -54,7 +54,7 @@ class ToolEnum(Enum):
         self.cn_tooltip = cn_tooltip
 
     @cache
-    def from_object_name(object_name: str) -> Optional["ToolEnum"]:
+    def from_object_name(object_name: str) -> 'ToolEnum':
         for enum in ToolEnum:
             if object_name == enum.object_name:
                 return enum
@@ -114,7 +114,7 @@ class Toolbox(QObject):
         win = Krita.instance().activeWindow()
         if win is None:
             return None
-        for i in self.__get_tool_buttons(win):
+        for i in Toolbox.__get_tool_buttons(win):
             if i.isChecked():
                 return ToolEnum.from_object_name(i.objectName())
         return None
@@ -127,7 +127,7 @@ class Toolbox(QObject):
         tool = self.current_tool
         if tool is new_tool:
             return
-        for i in self.__get_tool_buttons(win):
+        for i in Toolbox.__get_tool_buttons(win):
             if i.objectName() == new_tool.object_name:
                 self.currentToolChanged.emit(new_tool)
                 i.click()

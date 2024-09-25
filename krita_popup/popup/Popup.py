@@ -1,6 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QResizeEvent
+from PyQt5.QtGui import QFocusEvent, QResizeEvent
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget
@@ -18,9 +18,10 @@ class Popup(QWidget):
                  under_cursor = True,
                  ) -> None:
         super().__init__(None)
-        self.__items: list[tuple[QWidget, QRect]] = []
+        self.__items: list[tuple[PopupItem, QRect]] = []
         
         self.__under_cursor = under_cursor
+        
         self.setAttribute(Qt.WA_TranslucentBackground, True) # 透明背景，必须和无边框结合使用
         self.setWindowFlag(Qt.FramelessWindowHint, True) # 无边框
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True) # 置顶
@@ -33,11 +34,12 @@ class Popup(QWidget):
         self.__geo = screen.geometry()
         self.show()
         self.hide()
-        # TODO mask
+        self.refresh_mask()
     
     def refresh_mask(self):
+        self.__mask = QRegion()
         for item, _ in self.__items:
-            self.__mask.intersected(item.geometry())
+            self.__mask = self.__mask.united(item.geometry())
         self.setMask(self.__mask)
 
     def add_item(self, widget: QWidget, relative_geo: QRect):
@@ -62,6 +64,11 @@ class Popup(QWidget):
         res.moveTopLeft(res.topLeft() + center)
         return res
     
+    def focusOutEvent(self, a0: QFocusEvent) -> None:
+        print('focusOutEvent')
+        self.hide()
+        return super().focusOutEvent(a0)
+
     def resizeEvent(self, a0: QResizeEvent) -> None:
         self.setGeometry(self.__geo)
         for item, relative_geo in self.__items:
@@ -77,5 +84,12 @@ class Popup(QWidget):
             geo = QRect(self.__geo)
             geo.moveCenter(QCursor.pos())
             self.setGeometry(geo)
+        for item, _ in self.__items:
+            if hasattr(item.wrapped, 'on_show'):
+                getattr(item.wrapped, 'on_show')()
         super().show()
-
+    def hide(self):
+        for item, _ in self.__items:
+            if hasattr(item.wrapped, 'on_hide'):
+                getattr(item.wrapped, 'on_hide')()
+        super().hide()
