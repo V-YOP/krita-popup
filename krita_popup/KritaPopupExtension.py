@@ -5,6 +5,7 @@ class KritaPopupExtension(Extension):
     def __init__(self, parent):
         super().__init__(parent)
 
+
     def setup(self):
         pass
 
@@ -20,6 +21,13 @@ class KritaPopupExtension(Extension):
 
         setting_action = window.createAction("krita_pupup_settings", "Settings", "tools/krita_popup_menu")
         setting_action.triggered.connect(lambda: ...)
+
+        test_trigger_popup_action = window.createAction('krita_popup_test_trigger', 'Test Trigger', 'tools/krita_popup_menu')
+        test_trigger_popup_action.setCheckable(True)
+        test_trigger_popup_action.triggered.connect(self.test_trigger_dashboard)
+
+    def test_trigger_dashboard(self):
+        pass
 
 # And add the extension to Krita's list of extensions:
 Krita.instance().addExtension(KritaPopupExtension(Krita.instance())) 

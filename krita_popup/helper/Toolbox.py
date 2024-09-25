@@ -58,7 +58,7 @@ class ToolEnum(Enum):
         for enum in ToolEnum:
             if object_name == enum.object_name:
                 return enum
-        raise RuntimeError('WHAT THE FUCK?')
+        raise RuntimeError(f'Illegal objectName {object_name}')
     
 @singleton
 class Toolbox(QObject):
@@ -69,6 +69,10 @@ class Toolbox(QObject):
         self.__notifier.windowIsBeingCreated.connect(self.__add_toolbutton_click_listener)
 
     currentToolChanged = pyqtSignal(ToolEnum, name='currentToolChanged')
+    """
+    emit when current tool changed.
+    parameter: ToolEnum
+    """
 
     @window_cache
     @staticmethod
@@ -106,7 +110,7 @@ class Toolbox(QObject):
         QTimer.singleShot(0, go) # must wait the window created fully
 
     @property
-    def current_tool(self) -> ToolEnum:
+    def current_tool(self) -> ToolEnum | None:
         win = Krita.instance().activeWindow()
         if win is None:
             return None

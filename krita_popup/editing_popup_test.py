@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QWidget
-from popup import Popup
+from popup import EditingPopup
 
 if __name__ == '__main__':
     if QApplication.instance() is None:
@@ -13,15 +13,16 @@ if __name__ == '__main__':
 
     top = QPushButton()
     top.setText('top')
+    top.setMinimumSize(100,100)
     top.clicked.connect(lambda: print('top'))
     
     bottom = QPushButton()
     bottom.setText('bottom')
     
-    popup = Popup([
+    popup = EditingPopup([
         (top, QRect(0,-100, 100,50)),
         (bottom, QRect(0,100, 100,50))
-    ], under_cursor=True)
+    ])
 
     manager_widget = QWidget()
     manager_widget.setWindowFlag(Qt.WindowStaysOnTopHint, True) # 置顶
