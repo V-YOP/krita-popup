@@ -1,0 +1,81 @@
+from PyQt5.QtCore import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QResizeEvent
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QWidget
+from .PopupItem import PopupItem
+
+class Popup(QWidget):
+    """
+    The Real displayed popop widget, innocent to Krita for purity, use show and hide method to toggle display
+    """
+
+    def __init__(self, 
+                 items: list[tuple[QWidget, QRect]],
+                 /,*,
+                 screen: QScreen = None,
+                 under_cursor = True,
+                 ) -> None:
+        super().__init__(None)
+        self.__items: list[tuple[QWidget, QRect]] = []
+        
+        self.__under_cursor = under_cursor
+        self.setAttribute(Qt.WA_TranslucentBackground, True) # 透明背景，必须和无边框结合使用
+        self.setWindowFlag(Qt.FramelessWindowHint, True) # 无边框
+        self.setWindowFlag(Qt.WindowStaysOnTopHint, True) # 置顶
+
+        self.__mask = QRegion()
+        for i in items:
+            self.add_item(*i)
+        if not screen:
+            screen = QApplication.screenAt(self.pos())
+        self.__geo = screen.geometry()
+        self.show()
+        self.hide()
+        # TODO mask
+    
+    def refresh_mask(self):
+        for item, _ in self.__items:
+            self.__mask.intersected(item.geometry())
+        self.setMask(self.__mask)
+
+    def add_item(self, widget: QWidget, relative_geo: QRect):
+        """
+        Add a widget to me
+        """
+        wrapper = PopupItem(widget)
+        wrapper.setParent(self)
+        wrapper.interactive = True
+        wrapper.setGeometry(self.__to_real_geo(relative_geo))
+        wrapper.show()
+        self.__items.append((wrapper, relative_geo))
+        self.refresh_mask()
+
+    def __to_real_geo(self, relative_geo: QRect):
+        # if not self.__under_cursor:
+        center = self.geometry().center()
+        # else:
+        #     center = QCursor.pos()
+        #     print(f'{QCursor.pos()=}')
+        res = QRect(relative_geo)
+        res.moveTopLeft(res.topLeft() + center)
+        return res
+    
+    def resizeEvent(self, a0: QResizeEvent) -> None:
+        self.setGeometry(self.__geo)
+        for item, relative_geo in self.__items:
+            item.unsetCursor()
+            item.setGeometry(self.__to_real_geo(relative_geo))
+        self.refresh_mask()
+        return super().resizeEvent(a0)
+    
+    def show(self):
+        if not self.__under_cursor:
+            self.setGeometry(self.__geo)
+        else:
+            geo = QRect(self.__geo)
+            geo.moveCenter(QCursor.pos())
+            self.setGeometry(geo)
+        super().show()
+
