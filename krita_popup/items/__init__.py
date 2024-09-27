@@ -2,7 +2,7 @@
 contains widgets that can be configured placed on popup
 """
 
-from ._item_gegistry import items
+from ._item_gegistry import item_defs
 
 
 # import all modules on this directory

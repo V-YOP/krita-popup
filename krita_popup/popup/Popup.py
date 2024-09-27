@@ -14,7 +14,6 @@ class Popup(QWidget):
     def __init__(self, 
                  items: list[tuple[QWidget, QRect]],
                  /,*,
-                 screen: QScreen = None,
                  under_cursor = True,
                  ) -> None:
         super().__init__(None)
@@ -29,9 +28,10 @@ class Popup(QWidget):
         self.__mask = QRegion()
         for i in items:
             self.add_item(*i)
-        if not screen:
-            screen = QApplication.screenAt(self.pos())
+        # if not screen:
+        screen = QApplication.screenAt(self.pos())
         self.__geo = screen.geometry()
+        print(f'{self.__geo=}')
         self.show()
         self.hide()
         self.refresh_mask()
@@ -54,9 +54,16 @@ class Popup(QWidget):
         self.__items.append((wrapper, relative_geo))
         self.refresh_mask()
 
+    def clear_items(self):
+        for wrapper, _ in self.__items:
+            wrapper.setParent(None)
+            wrapper.deleteLater()
+        self.__items[:] = []
+        self.refresh_mask()
+
     def __to_real_geo(self, relative_geo: QRect):
         # if not self.__under_cursor:
-        center = self.geometry().center()
+        center = self.rect().center()
         # else:
         #     center = QCursor.pos()
         #     print(f'{QCursor.pos()=}')
@@ -88,6 +95,7 @@ class Popup(QWidget):
             if hasattr(item.wrapped, 'on_show'):
                 getattr(item.wrapped, 'on_show')()
         super().show()
+        print(f'{self.geometry()=}')
     def hide(self):
         for item, _ in self.__items:
             if hasattr(item.wrapped, 'on_hide'):

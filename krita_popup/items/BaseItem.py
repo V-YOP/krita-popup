@@ -8,7 +8,7 @@ if false_me():
 
 T = TypeVar('T')
 
-class BaseItem(Protocol, Generic[T]):
+class BaseItem(Generic[T]):
     """
     Item interface, **must be inherited**, listen popup show, hide and editing me.
     

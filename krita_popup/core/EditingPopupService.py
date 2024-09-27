@@ -1,9 +1,10 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
+from .ConfigurationService import ConfigurationService
 from krita_popup.helper import singleton
 from krita_popup.helper.QtAll import *
 from krita_popup.popup import EditingPopup
-from krita_popup.items import items
+from krita_popup.items import item_defs
 
 @singleton
 class EditingPopupService:
@@ -20,9 +21,12 @@ class EditingPopupService:
     1. User click it, select an item
     2. Place corresponding widget on center! configuration? no configuration!
     """
+
     def __init__(self) -> None:
+        # TODO add a method about 
         popup = EditingPopup([])
         
+        self.__configuration_service = ConfigurationService()
         self.__popup = popup
         self.__item_selector = self.__create_item_selector_widget()
         self.__cancel_button = self.__create_button('Cancel')
@@ -46,12 +50,13 @@ class EditingPopupService:
     def __create_item_selector_widget(self):
         item_selector = QComboBox(self.__popup)
         # always display on left side
-        item_entrys = items().items()
+        item_entrys = item_defs().items()
         for item_name, _ in item_entrys:
             item_selector.addItem(item_name)
+
         def on_select(idx: int):
             item_selector.setCurrentIndex(-1)
-            self.__on_add_item(*item_entrys[idx][1])
+            self.__on_add_item(item_entrys[idx][1])
         item_selector.currentIndexChanged.connect(on_select)
         item_selector.show()
         return item_selector
@@ -62,7 +67,7 @@ class EditingPopupService:
         btn.show()
         return btn
         
-    def __on_add_item(config_type, widget_type):
+    def __on_add_item(self, item_type):
         # TODO place the widget under cursor,
         ...
 
@@ -73,11 +78,13 @@ class EditingPopupService:
             signal.disconnect(go)
         signal.connect(go)
 
-    def wait_for_done(self) -> list[tuple[QWidget, QRect]] | None:
+    def wait_for_done(self, items: list[tuple[QWidget, QRect]]) -> list[tuple[QWidget, QRect]] | None:
         """
         show and wait 
         """
         popup = self.__popup
+        popup.clear_items()
+        
         popup.show()
         self.__reset_widget_pos()
 

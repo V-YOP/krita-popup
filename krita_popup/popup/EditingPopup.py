@@ -83,14 +83,14 @@ class EditingPopup(QWidget):
             return
         
     def __to_real_geo(self, relative_geo: QRect):
-        center = self.geometry().center()
+        center = self.rect().center()
         res = QRect(relative_geo)
         res.moveTopLeft(res.topLeft() + center)
         print(self.geometry())
         return res
     
     def to_relative_geo(self, real_geo: QRect):
-        center = self.geometry().center()
+        center = self.rect().center()
         res = QRect(real_geo)
         res.moveTopLeft(res.topLeft() - center)
         return res

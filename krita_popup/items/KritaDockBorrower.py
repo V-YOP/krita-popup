@@ -1,9 +1,8 @@
 """在打开文档后在Scripter中开始执行，需要避免窗口被GC"""
-from typing import TypedDict, override
-from PyQt5.QtGui import QCloseEvent, QResizeEvent
+from typing import TypedDict
+from PyQt5.QtGui import QResizeEvent
 from krita import *
 from PyQt5.QtCore import *
-from PyQt5.QtCore import QEvent, QObject, Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QWidget
@@ -18,17 +17,14 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
     borrow krita's docker content
     """
 
-    @override
     @staticmethod
     def default_configuration() -> KritaDockBorrowerConfig:
         return KritaDockBorrowerConfig(object_name='KisLayerBox')
 
-    @override
     @staticmethod
     def create(conf: KritaDockBorrowerConfig):
         ...
     
-    @override
     def start_editing(self) -> KritaDockBorrowerConfig:
         ...
 

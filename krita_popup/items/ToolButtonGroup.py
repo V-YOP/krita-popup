@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-from typing import TypedDict, override
+from typing import TypedDict
 from krita_popup.helper.QtAll import *
 from krita_popup.helper import Toolbox, ToolEnum
 from krita import *
@@ -24,7 +23,6 @@ class ToolButtonGroupConfig(TypedDict):
 
 @RegistItem('Tool Button Group')
 class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
-    @override
     @staticmethod
     def default_configuration() -> ToolButtonGroupConfig:
         return ToolButtonGroupConfig(
@@ -32,12 +30,10 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
             horizontal=True,
         )
 
-    @override
     @staticmethod
     def create(conf: ToolButtonGroupConfig):
         return ToolButtonGroup(conf)
     
-    @override
     def start_editing(self) -> ToolButtonGroupConfig:
         ...
         
