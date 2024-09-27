@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import QWidget
 
 class PopupItem(QWidget):
     """
+    **THIS CLASS SHOULD NOT BE EXPOSED**
+    
     A wrapper for widgets added onto Popup, the wrapped widget's parent will be the wrapper, used for controlling interactivity and providing helpful methods.
     """
     def __init__(self, wrapped: QWidget) -> None:

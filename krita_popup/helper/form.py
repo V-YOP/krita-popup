@@ -1,10 +1,73 @@
+from dataclasses import dataclass
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
+from typing import Generic, Literal, Optional, TypeVar, TypedDict, Union
 
+@dataclass
+class InputField:
+    field: str
+    """
+    字段名
+    """
+    defaultValue: str = ''
+    """
+    默认值
+    """
+    locked: bool = False
+    type: Literal['input'] = 'input'
+
+@dataclass
+class RatioField:
+    field: str
+    items: list[str]
+    defaultValue: str | None = None
+    locked: bool = False
+    type: Literal['ratio'] = 'ratio'
+
+@dataclass
+class DropdownField:
+    field: str
+    items: list[str]
+    defaultValue: str | None = None
+    locked: bool = False
+    type: Literal['dropdown'] = 'dropdown'
+
+@dataclass
+class CheckboxField:
+    field: str
+    items: list[str]
+    defaultValue: list[str] | None = None
+    locked: bool = False
+    type: Literal['checkbox'] = 'checkbox'
+
+@dataclass
+class FileField:
+    field: str
+    type: Literal['file'] = 'file'
+
+Field = Union[InputField, RatioField, DropdownField, CheckboxField, FileField]
+
+
+
+
+class A(TypedDict):
+    type: Literal['hello']
+    va: int
+class B(TypedDict):
+    type: Literal['world']
+    vb: int
+
+U = A | B
+
+def f(u: U):
+    match u['type']:
+        case 'hello':
+            x = u['va']
+            
 def create_form(config):
     # 创建一个 QWidget 用于容纳表单
     form_widget = QWidget()
-    layout = QVBoxLayout()
+    layout = QFormLayout()
     fields = {}
     
     for field in config:
@@ -14,12 +77,8 @@ def create_form(config):
         locked = field.get('locked', False)
         items = field.get('items', [])
         
-        # 创建一个水平布局来包含标签和字段组件
+        # 创建一个水平布局来包含字段组件
         field_layout = QHBoxLayout()
-        
-        # 创建并添加字段的标签
-        label = QLabel(field_name)
-        field_layout.addWidget(label)
         
         if field_type == 'input':
             input_widget = QLineEdit()
@@ -84,7 +143,7 @@ def create_form(config):
             raise ValueError(f"Unsupported field type: {field_type}")
 
         # 将字段的水平布局添加到主布局中
-        layout.addLayout(field_layout)
+        layout.addRow(field_name, field_layout)
 
     form_widget.setLayout(layout)
     
@@ -118,7 +177,7 @@ if __name__ == "__main__":
         {'field': '锁定输入字段', 'type': 'input', 'defaultValue': '锁定值', 'locked': True},
         {'field': '单选', 'type': 'ratio', 'items': ['A', 'B'], 'defaultValue': 'A', 'locked': True},
         {'field': '下拉单选', 'type': 'dropdown', 'items': ['A', 'B'], 'defaultValue': 'A', 'locked': True},
-        {'field': '复选框', 'type': 'checkbox', 'items': ['选项1', '选项2'], 'defaultValue': ['选项1'], 'locked': True},
+        {'field': '复选框', 'type': 'checkbox', 'items': ['选项1', '选项2', '选项3', '选项4','选项1', '选项2', '选项3', '选项4'], 'defaultValue': ['选项1'], 'locked': True},
         {'field': '文件选择', 'type': 'file'}
     ]
 

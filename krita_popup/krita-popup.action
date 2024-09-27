@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ActionCollection version="2" name="Scripts">
     <Actions category="Scripts">
-        <text>krita_popup_test_trigger</text>
-        <Action name="krita_popup_test_trigger">
+        <text>krita_popup_toggle</text>
+        <Action name="krita_popup_toggle">
             <icon/>
-            <text>Open Resources Folder</text>
-            <whatsThis>Opens a file browser at the location Krita saves resources such as brushes to.</whatsThis>
-            <toolTip>Opens a file browser at the location Krita saves resources such as brushes to.</toolTip>
-            <iconText>Open Resources Folder</iconText>
+            <text>Toggle display of the popup</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
             <activationFlags>0</activationFlags>
             <activationConditions>0</activationConditions>
             <shortcut>`</shortcut>

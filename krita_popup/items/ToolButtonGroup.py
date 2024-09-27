@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from typing import TypedDict, override
 from krita_popup.helper.QtAll import *
 from krita_popup.helper import Toolbox, ToolEnum
 from krita import *
+from .BaseItem import BaseItem
 from ._item_gegistry import RegistItem
 
 TOOLBUTTON_STYLE = """
@@ -15,25 +17,39 @@ QToolButton:checked {
 }
 """.strip()
 
-@dataclass
-class ToolButtonGroupConfig:
+class ToolButtonGroupConfig(TypedDict):
     tools: list[str]
-    """
-    tools' objectNames
-    """
-    horizontal: bool = True
+    horizontal: bool
 
-@RegistItem('Tool Button Group', ToolButtonGroupConfig)
-class ToolButtonGroup(QWidget):
+
+@RegistItem('Tool Button Group')
+class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
+    @override
+    @staticmethod
+    def default_configuration() -> ToolButtonGroupConfig:
+        return ToolButtonGroupConfig(
+            tools=[ToolEnum.KRITA_SHAPE_KIS_TOOL_BRUSH.object_name],
+            horizontal=True,
+        )
+
+    @override
+    @staticmethod
+    def create(conf: ToolButtonGroupConfig):
+        return ToolButtonGroup(conf)
+    
+    @override
+    def start_editing(self) -> ToolButtonGroupConfig:
+        ...
+        
+
     def __init__(self, config: ToolButtonGroupConfig) -> None:
         super().__init__()
         self.__toolbox = Toolbox()
-        self.__tools = [ToolEnum.from_object_name(i) for i in config.tools]
+        self.__tools = [ToolEnum.from_object_name(i) for i in config['tools']]
         self.__button_widgets: list[QToolButton] = []
         self.__toolbox.currentToolChanged.connect(self.on_tool_changed)
 
-        self.setFocusPolicy(Qt.NoFocus) # 使得组件无法获得焦点
-        self.__layout = QHBoxLayout() if config.horizontal else QVBoxLayout()
+        self.__layout = QHBoxLayout() if config['horizontal'] else QVBoxLayout()
         self.setLayout(self.__layout)
         self.__layout.setSpacing(0)
 

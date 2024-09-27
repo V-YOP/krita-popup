@@ -1,0 +1,1 @@
+TOGGLE_ACTION_ID = 'krita_popup_toggle'

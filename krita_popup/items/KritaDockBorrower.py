@@ -1,4 +1,5 @@
 """在打开文档后在Scripter中开始执行，需要避免窗口被GC"""
+from typing import TypedDict, override
 from PyQt5.QtGui import QCloseEvent, QResizeEvent
 from krita import *
 from PyQt5.QtCore import *
@@ -6,13 +7,35 @@ from PyQt5.QtCore import QEvent, QObject, Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QWidget
+from .BaseItem import BaseItem
 
-class KritaDockBorrower(QWidget):
+class KritaDockBorrowerConfig(TypedDict):
+    object_name: str
+
+
+class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
     """
     borrow krita's docker content
     """
+
+    @override
+    @staticmethod
+    def default_configuration() -> KritaDockBorrowerConfig:
+        return KritaDockBorrowerConfig(object_name='KisLayerBox')
+
+    @override
+    @staticmethod
+    def create(conf: KritaDockBorrowerConfig):
+        ...
+    
+    @override
+    def start_editing(self) -> KritaDockBorrowerConfig:
+        ...
+
+
     def __init__(self, dock_widget: DockWidget) -> None:
         super().__init__(None)
+        ...
         self.__borrowed_widget = None
         self.__dock_widget = dock_widget
         self.__placeholder = QLabel('Borrowed')

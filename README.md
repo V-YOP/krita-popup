@@ -6,8 +6,8 @@ TODO there should be a gif
 
 This popup is configurable, Many type of widgets can be placed and configured on it, including:
 
-1. [ ] Dockers those krita provided
-2. [ ] Tools
+1. [X] Dockers those krita provided(multiple window support...?)
+2. [X] Tools
 3. [ ] A minimal tool option which will change with current tool
 4. [ ] Specific Brushes and other resources
 5. [ ] (checkable) Actions like eraser mode, mirror.
@@ -15,3 +15,8 @@ This popup is configurable, Many type of widgets can be placed and configured on
 7. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
 8. [ ] Menus, like the top menu and submenu within it like 'Filter'
 
+TODO:
+
+1. [ ] Add Widgets in editing mode
+2. [ ] widget configuration panel (actually, i don't wanna do it)
+3. [ ] multiple layout change

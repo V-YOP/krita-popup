@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Iterable, Literal, Optional
 from PyQt5.QtCore import *
 from PyQt5.QtCore import QChildEvent, Qt
 from PyQt5.QtGui import QPaintEvent, QResizeEvent
@@ -13,7 +13,7 @@ class EditingPopup(QWidget):
     """
     The editing popup
     """
-    def __init__(self, items: list[tuple[QWidget, QRect]]) -> None:
+    def __init__(self, items: list[tuple[QWidget, QRect, list[tuple[str, QAction]]]]) -> None:
         super().__init__(None)
         self.setAttribute(Qt.WA_TranslucentBackground, True) # 透明背景，必须和无边框结合使用
         self.setWindowFlag(Qt.FramelessWindowHint, True) # 无边框
@@ -38,7 +38,7 @@ class EditingPopup(QWidget):
         self.installEventFilter(self.__resize_cross_line_event_filter)
         
 
-        self.__items: list[tuple[PopupItem, QRect]] = []
+        self.__items: list[tuple[PopupItem, QRect, list[tuple[str, QAction]]]] = []
 
         self.__item_geometry_handler = PopupItemGeometryHandler()
         for i in items:
@@ -48,7 +48,7 @@ class EditingPopup(QWidget):
         self.hide()
         
     def resizeEvent(self, a0: QResizeEvent) -> None:
-        for item, relative_geo in self.__items:
+        for item, relative_geo, _ in self.__items:
             item.unsetCursor()
             item.setGeometry(self.__to_real_geo(relative_geo))
         return super().resizeEvent(a0)
@@ -64,12 +64,11 @@ class EditingPopup(QWidget):
         p.end()
 
     def __popup_item_menu(self, item: PopupItem):
+        _, _, actions = next(i for i in self.__items if i[0] is item)
         # 获取菜单栏中的菜单项
         menu = QMenu(self)
-        def delete_me():
-            self.remove_item(item.wrapped)
-            self.repaint()
-        menu.addAction('Delete', delete_me)
+        for name, action in actions:
+            menu.addAction(name, action)
         menu.exec_(item.mapToGlobal(item.rect().topRight()))
 
     def __on_item_event(self, item: PopupItem, event: QEvent):
@@ -90,13 +89,13 @@ class EditingPopup(QWidget):
         print(self.geometry())
         return res
     
-    def __to_relative_geo(self, real_geo: QRect):
+    def to_relative_geo(self, real_geo: QRect):
         center = self.geometry().center()
         res = QRect(real_geo)
         res.moveTopLeft(res.topLeft() - center)
         return res
     
-    def add_item(self, widget: QWidget, relative_geo: QRect):
+    def add_item(self, widget: QWidget, relative_geo: QRect, actions: Iterable[tuple[str, QAction]] = ()):
         """
         Add a widget to me
         """
@@ -108,7 +107,7 @@ class EditingPopup(QWidget):
         wrapper.interactive = False
         wrapper.setGeometry(self.__to_real_geo(relative_geo))
         wrapper.show()
-        self.__items.append((wrapper, relative_geo))
+        self.__items.append((wrapper, relative_geo, list(actions)))
 
     def remove_item(self, widget: QWidget):
         """
@@ -121,49 +120,16 @@ class EditingPopup(QWidget):
             wrapper[0].setParent(None)
             wrapper[0].deleteLater()
             return wrapper[0].wrapped
+        
+    def clear_items(self):
+        for wrapper, _, _ in self.__items:
+            wrapper.removeEventFilter(self.__delegate_event_filter)
+            wrapper.setParent(None)
+            wrapper.deleteLater()
+        self.__items[:] = []
 
-    def wait_for_done(self) -> list[tuple[QWidget, QRect]] | None:
+    def items(self):
         """
-        block until popup close, return (and move) widget and relative_geometry s
+        return widget and real relative_geo pairs
         """
-        self.show()
-        loop = QEventLoop()
-        cancel_button = QPushButton(self)
-        apply_button = QPushButton(self)
-        size = self.size()
-
-        cancel_button_geo = QRect()
-        cancel_button_geo.setSize(QSize(200, 60))
-        cancel_button_geo.moveBottomRight(QPoint(size.width() - 600, size.height() - 100))
-        cancel_button.setGeometry(cancel_button_geo)
-        cancel_button.setText('Cancel')
-        cancel_button.show()
-
-        apply_button_geo = QRect()
-        apply_button_geo.setSize(QSize(200, 60))
-        apply_button_geo.moveBottomRight(QPoint(size.width() - 300, size.height() - 100))
-        apply_button.setGeometry(apply_button_geo)
-        apply_button.setText('Apply')
-        apply_button.show()
-
-        def cancel_me():
-            loop.exit(1)
-            cancel_button.deleteLater()
-            apply_button.deleteLater()
-        def apply_me():
-            loop.exit(0)
-            cancel_button.deleteLater()
-            apply_button.deleteLater()
-        cancel_button.clicked.connect(cancel_me)
-        apply_button.clicked.connect(apply_me)
-
-        ret = loop.exec()
-        self.hide()
-        if ret == 1:
-            return None
-        res = []
-        for item, _ in [*self.__items]:
-            relative_geo = self.__to_relative_geo(item.geometry())
-            res.append((item.wrapped, relative_geo))
-            self.remove_item(item.wrapped)
-        return res
+        return [(i.wrapped, self.to_relative_geo(i.geometry())) for i, _ in self.__items]
