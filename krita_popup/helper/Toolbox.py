@@ -13,7 +13,7 @@ class ToolEnum(Enum):
     INTERACTION_TOOL = ('InteractionTool', 'select', 'Select Shapes Tool', '形状选择工具')
     KARBON_CALLIGRAPHY_TOOL = ('KarbonCalligraphyTool', 'calligraphy', 'Calligraphy', '西文书法工具')
     PATH_TOOL = ('PathTool', 'shape_handling', 'Edit Shapes Tool', '锚点编辑工具：对矢量图形的锚点进行操作')
-    SVG_TEXT_TOOL = ('SvgTextTool', 'None', 'Text Tool', '文字工具')
+    SVG_TEXT_TOOL = ('SvgTextTool', 'draw-text', 'Text Tool', '文字工具')
     KRITA_SHAPE_KIS_TOOL_SMART_PATCH = ('KritaShape/KisToolSmartPatch', 'krita_tool_smart_patch', 'Smart Patch Tool', '智能补丁工具/仿制图章/修复画笔')
     KIS_TOOL_ENCLOSE_AND_FILL = ('KisToolEncloseAndFill', 'krita_tool_enclose_and_fill', 'Enclose and Fill Tool', '闭合填充工具/圈涂')
     KRITA_SELECTED_KIS_TOOL_COLOR_SAMPLER = ('KritaSelected/KisToolColorSampler', 'krita_tool_color_sampler', 'Sample a color from the image or current layer', '拾色器/滴管：拾取图像或当前图层颜色')
@@ -59,6 +59,9 @@ class ToolEnum(Enum):
             if object_name == enum.object_name:
                 return enum
         raise RuntimeError(f'Illegal objectName {object_name}')
+    @property
+    def qicon(self):
+        return Krita.instance().icon(self.icon)
     
 @singleton
 class Toolbox(QObject):

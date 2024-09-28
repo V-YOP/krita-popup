@@ -17,6 +17,7 @@ This popup is configurable, Many type of widgets can be placed and configured on
 
 TODO:
 
-1. [ ] Add Widgets in editing mode
-2. [ ] widget configuration panel (actually, i don't wanna do it)
-3. [ ] multiple layout change
+1. [X] Add Widgets in editing mode
+2. [ ] Fixed item (always displayed at specific locations nomatter where the cursor is)
+3. [\] widget configuration panel (actually, i don't wanna do it)
+4. [ ] multiple layout change

@@ -28,9 +28,11 @@ class BaseItem(Generic[T]):
         configuration: A configuration class
         """
 
-    def start_editing(self) -> T:
+    def start_editing(self) -> T | None:
         """
-        return edited configuration
+        return edited configuration, return None if no editing.
+
+        subclass instance **should always refresh it's configuration with the returned configuration**
         """
 
     def on_show(self): 
@@ -40,6 +42,6 @@ class BaseItem(Generic[T]):
 
     def on_hide(self): 
         """
-        Invoked when popup hides
+        Invoked when popup hides and deleted from editing popup
         """
     

@@ -1,9 +1,13 @@
 from typing import TypedDict
+
+from PyQt5.QtGui import QKeyEvent
 from krita_popup.helper.QtAll import *
 from krita_popup.helper import Toolbox, ToolEnum
 from krita import *
-from .BaseItem import BaseItem
-from ._item_gegistry import RegistItem
+from .ToolButtonGroupConfig import ToolButtonGroupConfig
+from .ToolButtonEditDialog import exec_editing_dialog
+from ..BaseItem import BaseItem
+from .._item_gegistry import RegistItem
 
 TOOLBUTTON_STYLE = """
 QToolButton {
@@ -16,9 +20,6 @@ QToolButton:checked {
 }
 """.strip()
 
-class ToolButtonGroupConfig(TypedDict):
-    tools: list[str]
-    horizontal: bool
 
 
 @RegistItem('Tool Button Group')
@@ -34,12 +35,13 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
     def create(conf: ToolButtonGroupConfig):
         return ToolButtonGroup(conf)
     
-    def start_editing(self) -> ToolButtonGroupConfig:
-        ...
+    def start_editing(self) -> ToolButtonGroupConfig | None:
+        return exec_editing_dialog(self.__config)
         
-
     def __init__(self, config: ToolButtonGroupConfig) -> None:
         super().__init__()
+        self.__config = config
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.__toolbox = Toolbox()
         self.__tools = [ToolEnum.from_object_name(i) for i in config['tools']]
         self.__button_widgets: list[QToolButton] = []
@@ -57,11 +59,14 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
 
     def __create_tool_button(self, tool_enum: ToolEnum) -> QToolButton:
         btn = QToolButton(self)
+        btn.setFocusPolicy(Qt.NoFocus)
         btn.setObjectName(tool_enum.object_name)
         btn.setCheckable(True)
+        if self.__toolbox.current_tool == tool_enum:
+            btn.setChecked(True)
         btn.setStyleSheet(TOOLBUTTON_STYLE)
         btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        btn.setIcon(Krita.instance().icon(tool_enum.icon))
+        btn.setIcon(tool_enum.qicon)
         # when resize, set icon to my size 80%
         def set_icon_size(self, _):
             btn.setIconSize(btn.size() * 0.6)
@@ -85,3 +90,4 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
         print('me show!')
     def on_hide(self):
         print('me hide!')
+

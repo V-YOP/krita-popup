@@ -123,18 +123,20 @@ class EditingPopup(QWidget):
         Remove a widget from me
         """
         wrapper = next((i for i in self.__items if i[0].wrapped is widget), None)
-        if wrapper:
-            self.__items.remove(wrapper)
-            wrapper[0].removeEventFilter(self.__delegate_event_filter)
-            wrapper[0].setParent(None)
-            wrapper[0].deleteLater()
-            return wrapper[0].wrapped
+        if not wrapper:
+            return
+        
+        if hasattr(wrapper[0], 'on_hide'):
+            getattr(wrapper[0], 'on_hide')()
+        self.__items.remove(wrapper)
+        wrapper[0].removeEventFilter(self.__delegate_event_filter)
+        wrapper[0].setParent(None)
+        wrapper[0].deleteLater()
+        return wrapper[0].wrapped
         
     def clear_items(self):
-        for wrapper, _, _ in self.__items:
-            wrapper.removeEventFilter(self.__delegate_event_filter)
-            wrapper.setParent(None)
-            wrapper.deleteLater()
+        for wrapper, _, _ in [*self.__items]:
+            self.remove_item(wrapper.wrapped)
         self.__items[:] = []
 
     def items(self):

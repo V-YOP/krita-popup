@@ -52,7 +52,7 @@ class EditingPopupService:
 
     def __create_item_selector_widget(self):
         item_selector = QComboBox(self.__popup)
-        item_selector.addItem('')
+        item_selector.addItem('--- add item ---')
         item_selector.setCurrentIndex(0)
         # always display on left side
         item_entrys = list(item_defs().items())
@@ -62,7 +62,7 @@ class EditingPopupService:
             if idx == 0:
                 return
             item_selector.setCurrentIndex(0)
-            self.__on_add_item(*item_entrys[idx - 1])
+            self.__add_item(*item_entrys[idx - 1])
         item_selector.currentIndexChanged.connect(on_select)
         item_selector.show()
         return item_selector
@@ -73,14 +73,19 @@ class EditingPopupService:
         btn.show()
         return btn
         
-    def __on_add_item(self, item_type_name: str, item_type: type[BaseItem]):
+    def __add_item(self, item_type_name: str, item_type: type[BaseItem], item_config: ItemConfig | None = None):
         # TODO place the widget under cursor,
-        print(item_type)
-        id = uuid.uuid4().hex
-        config = item_type.default_configuration()
+        if item_config is None:
+            id = uuid.uuid4().hex
+            config = item_type.default_configuration()
+            geo = (-100, -100, 200, 200)
+        else: 
+            id = item_config['id']
+            config = item_config['conf']
+            geo = item_config['geo']
+
         instance: QWidget = item_type.create(config)
-        geo = [-100, -100, 200, 200]
-        self.__items.append(ItemInstance(
+        item_instance = ItemInstance(
             uuid=id,
             config=ItemConfig(
                 id=id,
@@ -90,8 +95,9 @@ class EditingPopupService:
             ),
             widget=instance,
             geo=QRect(*geo)
-        ))
-        self.__popup.add_item(instance, QRect(*geo), self.__item_actions(instance))
+        )
+        self.__items.append(item_instance)
+        self.__popup.add_item(instance, QRect(*geo), self.__item_actions(item_instance))
 
     def __connect_once(self, signal: pyqtBoundSignal, slot):
         def go():
@@ -111,7 +117,13 @@ class EditingPopupService:
         edit_action.setText('Edit')
         def edit_item():
             item: BaseItem = instance.widget
-            instance.config['conf'] = item.start_editing()
+            new_config = item.start_editing()
+            if new_config:
+                instance.config['conf'] = new_config
+            delete_item()
+            self.__add_item(instance.config['item_type'], item_defs()[instance.config['item_type']], instance.config)
+            
+
         edit_action.triggered.connect(edit_item)
         return [
             edit_action,

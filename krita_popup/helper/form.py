@@ -192,10 +192,13 @@ if __name__ == "__main__":
 
     dialog = QDialog(window)
     button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+    button_box.accepted.connect(lambda: dialog.done(0))
+    button_box.rejected.connect(lambda: dialog.done(1))
     dialog.setLayout(QVBoxLayout())
     dialog.layout().addWidget(form_widget)
     dialog.layout().addWidget(button_box)
-    dialog.exec_()
+    
+    print(dialog.exec_())
     print_values()
 
     # show.clicked.connect(print_values)

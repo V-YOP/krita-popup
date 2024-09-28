@@ -25,7 +25,7 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
     def create(conf: KritaDockBorrowerConfig):
         ...
     
-    def start_editing(self) -> KritaDockBorrowerConfig:
+    def start_editing(self) -> KritaDockBorrowerConfig | None:
         ...
 
 
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     return_back_btn = QPushButton(None)
     return_back_btn.clicked.connect(container.return_back)
-    return_back_btn.setText('return back')
+    return_back_btn.setText('Return Back')
 
     win.add_item(container, QRect(10, 100, 600, 300))
     win.add_item(borrow_btn, QRect(10, 10, 120, 50))
