@@ -81,15 +81,15 @@ def exec_editing_dialog(setting: ToolButtonGroupConfig) -> ToolButtonGroupConfig
     tools_widget = ToolsEditWidget([ToolEnum.from_object_name(i) for i in setting['tools']])
 
     button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-    button_box.accepted.connect(lambda: dialog.done(0))
-    button_box.rejected.connect(lambda: dialog.done(1))
+    button_box.rejected.connect(lambda: dialog.done(0))
+    button_box.accepted.connect(lambda: dialog.done(1))
     dialog.setLayout(QVBoxLayout())
 
     dialog.layout().addWidget(horizontal_checkbox)
     dialog.layout().addWidget(tools_widget)
     dialog.layout().addWidget(button_box)
 
-    if dialog.exec_() == 1:
+    if dialog.exec() == 0:
         return None
     
     horizontal = horizontal_checkbox.isChecked()
@@ -99,12 +99,7 @@ def exec_editing_dialog(setting: ToolButtonGroupConfig) -> ToolButtonGroupConfig
         horizontal=horizontal
     )
 
-
 if __name__ == '__main__':
-    # tool = ToolsEditWidget([ToolEnum.KRITA_SHAPE_KIS_TOOL_BRUSH])
-    # tool.resize(1000, 1000)
-    # tool.raise_()
-    # tool.show()
     print(exec_editing_dialog(ToolButtonGroupConfig(
         tools=['KisToolSelectOutline', 'KisToolSelectSimilar', 'KisToolSelectRectangular'],
         horizontal=True,

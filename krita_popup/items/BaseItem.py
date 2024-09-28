@@ -30,9 +30,9 @@ class BaseItem(Generic[T]):
 
     def start_editing(self) -> T | None:
         """
-        return edited configuration, return None if no editing.
+        return edited configuration, return None if no editing. 
 
-        subclass instance **should always refresh it's configuration with the returned configuration**
+        subclass **has no need** to update itself with new configuration, it will be deleted (on_hide method will be invoked) and then recreated. 
         """
 
     def on_show(self): 

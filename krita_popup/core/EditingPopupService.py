@@ -149,12 +149,12 @@ class EditingPopupService:
         self.__reset_widget_pos()
         self.__popup.show()
         loop = QEventLoop()
-        self.__connect_once(self.__cancel_button.clicked, lambda: loop.exit(1))
-        self.__connect_once(self.__apply_button.clicked, lambda: loop.exit(0))
+        self.__connect_once(self.__cancel_button.clicked, lambda: loop.exit(0))
+        self.__connect_once(self.__apply_button.clicked, lambda: loop.exit(1))
         ret = loop.exec()
         self.__popup.hide()
 
-        if ret == 1:
+        if ret == 0:
             self.__items = []
             return None
         
