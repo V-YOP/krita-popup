@@ -13,7 +13,6 @@ class ItemConfig(TypedDict):
     conf: dict
     geo: tuple[int,int,int,int]
 
-
 class ItemInstance(NamedTuple):
     uuid: str
     config: ItemConfig
@@ -41,6 +40,7 @@ DEBUG_CONFIG: list[ItemConfig] = [
         horizontal=False,
     ))
 ]
+
 @singleton
 class ConfigurationService:
     """
@@ -53,8 +53,19 @@ class ConfigurationService:
         """
         if DEBUG:
             return DEBUG_CONFIG
+        
+        # TODO validate, filter all invalid settings
         setting = Krita.instance().readSetting('krita_popup', 'layout0', '[]')
         return json.loads(setting)
     
-    def save_configurations(self, setting: list[ItemConfig]):
-        Krita.instance().writeSetting('krita_popup', 'layout0', json.dumps(setting))
+    def save_configurations(self, settings: list[ItemConfig]):
+        """
+        save settings, items whose size is empty will be removed
+        """
+        # TODO validate, filter all invalid settings
+        filtered_settings = []
+        for setting in settings:
+            _, _, w, h = setting['geo']
+            if w * h != 0:
+                filtered_settings.append(setting)
+        Krita.instance().writeSetting('krita_popup', 'layout0', json.dumps(filtered_settings))
