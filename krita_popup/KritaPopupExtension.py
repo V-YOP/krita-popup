@@ -18,16 +18,12 @@ class KritaPopupExtension(Extension):
         self.menu = QMenu('Krita Popup', window.qwindow())
         menu_action.setMenu(self.menu)
 
-        toggle_display_action = window.createAction("krita_pupup_display_toggle", "Toggle Display Popup", "tools/krita_popup_menu")
-        toggle_display_action.setChecked(True)
-        toggle_display_action.triggered.connect(lambda: ...)
-
-        setting_action = window.createAction("krita_pupup_settings", "Settings", "tools/krita_popup_menu")
-        setting_action.triggered.connect(lambda: ...)
+        setting_action = window.createAction("krita_pupup_edit_popup", "Edit Popup", "tools/krita_popup_menu")
+        setting_action.triggered.connect(lambda: self.__popup_provider.start_editing())
 
         self.toggle_action = window.createAction(TOGGLE_ACTION_ID, 'Toggle Popup', 'tools/krita_popup_menu')
-        self.toggle_action.setCheckable(True)
         self.toggle_action.triggered.connect(self.toggle_popup)
+
 
     def toggle_popup(self):
         self.__popup_provider.set_popup_visible(not self.__popup_provider.is_popup_visible())

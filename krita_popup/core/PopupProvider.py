@@ -1,19 +1,12 @@
 
 from krita import Krita
 from krita_popup.constants import TOGGLE_ACTION_ID
-from .ConfigurationService import ConfigurationService
+from .ConfigurationService import ConfigurationService, ItemInstance
 from .EditingPopupService import EditingPopupService
 from krita_popup.helper import singleton
 from krita_popup.popup import EditingPopup, Popup
 from krita_popup.items import item_defs
 from krita_popup.helper.QtAll import *
-
-from typing import NamedTuple
-
-class ItemInstance(NamedTuple):
-    uuid: str
-    widget: QWidget
-    geo: QRect
 
 @singleton
 class PopupProvider:
@@ -28,7 +21,7 @@ class PopupProvider:
 
         self.__notifier = Krita.instance().notifier()
         self.__notifier.setActive(True)
-        
+
         # make sure popup hides when application closing, otherwise it will stay on backgrond and prevent krita from starting...
         self.__notifier.imageClosed.connect(lambda: self.set_popup_visible(False))
         self.__notifier.applicationClosing.connect(lambda: self.set_popup_visible(False))
@@ -43,9 +36,9 @@ class PopupProvider:
         confs = self.__configuration_service.load_configurations()
         items: list[ItemInstance] = []
         for conf in confs:
-            item_type, id, conf, geo = conf['item_type'], conf['id'], conf['conf'], conf['geo']
+            item_type, id, geo = conf['item_type'], conf['id'], conf['geo']
             assert item_type in item_def, f'unknown item type: {item_type}'
-            items.append(ItemInstance(id, item_def[item_type].create(conf), QRect(*geo)))
+            items.append(ItemInstance(id, conf, item_def[item_type].create(conf['conf']), QRect(*geo)))
         return items
 
     def is_popup_visible(self):
@@ -67,10 +60,21 @@ class PopupProvider:
             return
 
         items = self.__create_items_from_configuration()
-        for _, widget, geo in items:
-            self.__popup.add_item(widget, geo)
+        for item in items:
+            self.__popup.add_item(item.widget, item.geo)
         self.__popup.show()
         QTimer.singleShot(0, lambda: QApplication.setActiveWindow(Krita.instance().activeWindow().qwindow())) # re-focus krita window
 
     def start_editing(self):
-        ...
+        """
+        Fetch current items, showing editing popup, wait for 
+        """
+        self.set_popup_visible(False) # hide popup first
+        
+        items = self.__create_items_from_configuration()
+        new_items = self.__editing_popup_service.wait_for_done(items)
+        if new_items is None:
+            return # user click cancel, don't do anything
+        
+        
+        self.__configuration_service.save_configurations(new_items)

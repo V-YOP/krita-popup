@@ -1,10 +1,13 @@
+import uuid
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
+
 from .ConfigurationService import ConfigurationService
 from krita_popup.helper import singleton
 from krita_popup.helper.QtAll import *
 from krita_popup.popup import EditingPopup
-from krita_popup.items import item_defs
+from .ConfigurationService import ItemConfig, ItemInstance
+from krita_popup.items import BaseItem, item_defs
 
 @singleton
 class EditingPopupService:
@@ -24,16 +27,16 @@ class EditingPopupService:
 
     def __init__(self) -> None:
         # TODO add a method about 
-        popup = EditingPopup([])
-        
+        self.__popup = EditingPopup([])
         self.__configuration_service = ConfigurationService()
-        self.__popup = popup
         self.__item_selector = self.__create_item_selector_widget()
         self.__cancel_button = self.__create_button('Cancel')
         self.__apply_button = self.__create_button('Apply')
 
+        self.__items: list[ItemInstance] = []
+
     def __reset_widget_pos(self):
-        self.__item_selector.setGeometry(0,0,400,100)
+        self.__item_selector.setGeometry(0,0,400,50)
 
         size = self.__popup.size()
 
@@ -49,14 +52,17 @@ class EditingPopupService:
 
     def __create_item_selector_widget(self):
         item_selector = QComboBox(self.__popup)
+        item_selector.addItem('')
+        item_selector.setCurrentIndex(0)
         # always display on left side
-        item_entrys = item_defs().items()
+        item_entrys = list(item_defs().items())
         for item_name, _ in item_entrys:
             item_selector.addItem(item_name)
-
         def on_select(idx: int):
-            item_selector.setCurrentIndex(-1)
-            self.__on_add_item(item_entrys[idx][1])
+            if idx == 0:
+                return
+            item_selector.setCurrentIndex(0)
+            self.__on_add_item(*item_entrys[idx - 1])
         item_selector.currentIndexChanged.connect(on_select)
         item_selector.show()
         return item_selector
@@ -67,34 +73,94 @@ class EditingPopupService:
         btn.show()
         return btn
         
-    def __on_add_item(self, item_type):
+    def __on_add_item(self, item_type_name: str, item_type: type[BaseItem]):
         # TODO place the widget under cursor,
-        ...
+        print(item_type)
+        id = uuid.uuid4().hex
+        config = item_type.default_configuration()
+        instance: QWidget = item_type.create(config)
+        geo = [-100, -100, 200, 200]
+        self.__items.append(ItemInstance(
+            uuid=id,
+            config=ItemConfig(
+                id=id,
+                item_type=item_type_name,
+                conf=config,
+                geo=geo,
+            ),
+            widget=instance,
+            geo=QRect(*geo)
+        ))
+        self.__popup.add_item(instance, QRect(*geo), self.__item_actions(instance))
 
-    
     def __connect_once(self, signal: pyqtBoundSignal, slot):
-        def go(*args):
-            slot(*args)
+        def go():
+            slot()
             signal.disconnect(go)
         signal.connect(go)
 
-    def wait_for_done(self, items: list[tuple[QWidget, QRect]]) -> list[tuple[QWidget, QRect]] | None:
-        """
-        show and wait 
-        """
-        popup = self.__popup
-        popup.clear_items()
-        
-        popup.show()
-        self.__reset_widget_pos()
+    def __item_actions(self, instance: ItemInstance) -> list[QAction]:
+        delete_action = QAction()
+        delete_action.setText('Delete')
+        def delete_item():
+            self.__items.remove(instance)
+            self.__popup.remove_item(instance.widget)
+        delete_action.triggered.connect(delete_item)
 
+        edit_action = QAction()
+        edit_action.setText('Edit')
+        def edit_item():
+            item: BaseItem = instance.widget
+            instance.config['conf'] = item.start_editing()
+        edit_action.triggered.connect(edit_item)
+        return [
+            edit_action,
+            delete_action,
+        ]
+
+    def wait_for_done(self, items: list[ItemInstance]) -> list[ItemConfig] | None:
+        """
+        show and wait. 
+
+        items: item instances, **will be cleaned after invoke**
+        """
+        # move items to me 
+        self.__items = items[:]
+        items[:] = []
+        del items
+        self.__popup.clear_items()
+
+        # TODO
+        for item in self.__items:
+            self.__popup.add_item(item.widget, item.geo, self.__item_actions(item))
+        
+        self.__reset_widget_pos()
+        self.__popup.show()
         loop = QEventLoop()
         self.__connect_once(self.__cancel_button.clicked, lambda: loop.exit(1))
         self.__connect_once(self.__apply_button.clicked, lambda: loop.exit(0))
         ret = loop.exec()
-        popup.hide()
+        self.__popup.hide()
 
         if ret == 1:
+            self.__items = []
             return None
         
-        return popup.items()
+        result = []
+        for item in self.__items:
+            geo = self.__popup.relative_geometry(item.widget)
+            print(f'{item.widget.geometry()=}')
+            print(f'relative {geo=}')
+            print(f'{self.__popup.geometry()=}')
+            print(f'{self.__popup.geometry().center()=}')
+            result.append(ItemConfig(
+                id = item.uuid,
+                item_type = item.config['item_type'],
+                conf = item.config['conf'],
+                geo = [geo.x(), geo.y(), geo.width(), geo.height()]
+            ))
+        self.__items = []
+
+        print(result)
+        return result
+        # return self.__popup.items()

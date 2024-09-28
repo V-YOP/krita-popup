@@ -38,7 +38,7 @@ class EditingPopup(QWidget):
         self.installEventFilter(self.__resize_cross_line_event_filter)
         
 
-        self.__items: list[tuple[PopupItem, QRect, list[tuple[str, QAction]]]] = []
+        self.__items: list[tuple[PopupItem, QRect, list[QAction]]] = []
 
         self.__item_geometry_handler = PopupItemGeometryHandler()
         for i in items:
@@ -67,8 +67,8 @@ class EditingPopup(QWidget):
         _, _, actions = next(i for i in self.__items if i[0] is item)
         # 获取菜单栏中的菜单项
         menu = QMenu(self)
-        for name, action in actions:
-            menu.addAction(name, action)
+        for action in actions:
+            menu.addAction(action)
         menu.exec_(item.mapToGlobal(item.rect().topRight()))
 
     def __on_item_event(self, item: PopupItem, event: QEvent):
@@ -89,13 +89,22 @@ class EditingPopup(QWidget):
         print(self.geometry())
         return res
     
-    def to_relative_geo(self, real_geo: QRect):
+    def relative_geometry(self, widget: QWidget):
+        """
+        Get a widget's relative geometry to screen center
+        """
+        for wrapper, *_ in self.__items:
+            if wrapper.wrapped is widget:
+                return self.__to_relative_geo(wrapper.geometry())
+        raise RuntimeError('widget not in popup')
+
+    def __to_relative_geo(self, real_geo: QRect):
         center = self.rect().center()
         res = QRect(real_geo)
         res.moveTopLeft(res.topLeft() - center)
         return res
     
-    def add_item(self, widget: QWidget, relative_geo: QRect, actions: Iterable[tuple[str, QAction]] = ()):
+    def add_item(self, widget: QWidget, relative_geo: QRect, actions: Iterable[QAction] = ()):
         """
         Add a widget to me
         """
@@ -132,4 +141,15 @@ class EditingPopup(QWidget):
         """
         return widget and real relative_geo pairs
         """
-        return [(i.wrapped, self.to_relative_geo(i.geometry())) for i, _ in self.__items]
+        return [(i.wrapped, self.__to_relative_geo(i.geometry())) for i, _ in self.__items]
+    
+    def show(self):
+        for item, *_ in self.__items:
+            if hasattr(item.wrapped, 'on_show'):
+                getattr(item.wrapped, 'on_show')()
+        super().show()
+    def hide(self):
+        for item, *_ in self.__items:
+            if hasattr(item.wrapped, 'on_hide'):
+                getattr(item.wrapped, 'on_hide')()
+        super().hide()

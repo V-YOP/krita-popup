@@ -1,10 +1,11 @@
 
 
 import json
-from typing import Any, TypedDict
+from typing import Any, NamedTuple, TypedDict
 from krita_popup.helper import singleton
 from krita_popup.helper import ToolEnum
 from krita import *
+from krita_popup.helper.QtAll import *
 
 class ItemConfig(TypedDict):
     id: str
@@ -12,7 +13,14 @@ class ItemConfig(TypedDict):
     conf: dict
     geo: tuple[int,int,int,int]
 
-DEBUG = True
+
+class ItemInstance(NamedTuple):
+    uuid: str
+    config: ItemConfig
+    widget: QWidget
+    geo: QRect
+
+DEBUG = False
 DEBUG_CONFIG: list[ItemConfig] = [
     ItemConfig(id='horizontal_test', item_type='Tool Button Group', geo=(-200,-150,400,100), conf=dict(
         tools=[i.object_name for i in [
@@ -48,5 +56,5 @@ class ConfigurationService:
         setting = Krita.instance().readSetting('krita_popup', 'layout0', '[]')
         return json.loads(setting)
     
-    def save_configurations(self, setting: ItemConfig):
+    def save_configurations(self, setting: list[ItemConfig]):
         Krita.instance().writeSetting('krita_popup', 'layout0', json.dumps(setting))
