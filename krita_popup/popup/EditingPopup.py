@@ -126,8 +126,8 @@ class EditingPopup(QWidget):
         if not wrapper:
             return
         
-        if hasattr(wrapper[0], 'on_hide'):
-            getattr(wrapper[0], 'on_hide')()
+        if hasattr(wrapper[0].wrapped, 'on_hide'):
+            getattr(wrapper[0].wrapped, 'on_hide')()
         self.__items.remove(wrapper)
         wrapper[0].removeEventFilter(self.__delegate_event_filter)
         wrapper[0].setParent(None)

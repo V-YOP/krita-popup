@@ -117,9 +117,14 @@ class EditingPopupService:
         edit_action.setText('Edit')
         def edit_item():
             item: BaseItem = instance.widget
+            current_geo = self.__popup.relative_geometry(instance.widget)
+            
             new_config = item.start_editing()
-            if new_config:
-                instance.config['conf'] = new_config
+            if not new_config:
+                return
+            
+            instance.config['conf'] = new_config
+            instance.config['geo'] = [current_geo.x(),current_geo.y(),current_geo.width(),current_geo.height()]
             delete_item()
             self.__add_item(instance.config['item_type'], item_defs()[instance.config['item_type']], instance.config)
             
