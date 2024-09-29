@@ -1,5 +1,5 @@
 from krita import *
-from typing import *
+from typing import Callable
 from .QtAll import *
 from time import perf_counter
 
@@ -39,7 +39,7 @@ def get_pixel_data(doc: Document, cb: Callable[[bytearray], None]):
 
         start = perf_counter()
         size = len(qbytearray)
-        combined_byte_array[current_position:current_position + size] = qbytearray
+        combined_byte_array[current_position:current_position + size] = bytes(qbytearray)
         end = perf_counter()
         print(f"copy: {(end - start) * 1000} ms")
         

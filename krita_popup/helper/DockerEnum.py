@@ -48,11 +48,11 @@ class DockerEnum(Enum):
 
     @cache
     @staticmethod
-    def from_object_name(object_name: str) -> 'DockerEnum':
+    def from_object_name(object_name: str):
         for enum in DockerEnum:
             if object_name == enum.object_name:
                 return enum
-        raise RuntimeError(f'Illegal objectName {object_name}')
+        return None
     
     def widget(self, window: Window):
         for docker in window.dockers():

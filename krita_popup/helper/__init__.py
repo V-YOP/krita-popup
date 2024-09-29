@@ -6,3 +6,5 @@ from .ViewManager import Opinion, ViewManager
 from . import QtAll
 from . import util
 from . import myjson
+from . import form
+from .DockerEnum import DockerEnum

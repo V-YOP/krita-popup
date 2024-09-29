@@ -2,7 +2,7 @@ from typing import Generic, TypeVar
 from PyQt5.QtGui import QRegion
 
 def false_me() -> None:
-    return False
+    return False # type: ignore
 
 if false_me():
     from typing import Self
@@ -23,7 +23,7 @@ class BaseItem(Generic[T]):
         raise NotImplementedError()
 
     @staticmethod
-    def create(configuration: T) -> 'Self':
+    def create(configuration: T) -> 'Self': # type: ignore
         """
         Create instance by configuration. the client has no need to store the config_id because it's only used for identify configuration and will be given when store config
         
@@ -41,12 +41,16 @@ class BaseItem(Generic[T]):
 
     def on_show(self): 
         """
-        Invoked when popup shows
+        Invoked when popup added onto editing popup and editing popup showed.
+
+        **It might be invoked even if it's already visible!**
         """
 
     def on_hide(self): 
         """
         Invoked when popup hides and deleted from editing popup
+
+        **It might be invoked even if it's already non-visible!**
         """
     
     def custom_mask(self) -> QRegion:

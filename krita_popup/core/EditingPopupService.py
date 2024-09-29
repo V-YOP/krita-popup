@@ -116,7 +116,7 @@ class EditingPopupService:
         edit_action = QAction()
         edit_action.setText('Edit')
         def edit_item():
-            item: BaseItem = instance.widget
+            item: BaseItem = instance.widget # type: ignore
             current_geo = self.__popup.relative_geometry(instance.widget)
             
             new_config = item.start_editing()
@@ -124,7 +124,7 @@ class EditingPopupService:
                 return
             
             instance.config['conf'] = new_config
-            instance.config['geo'] = [current_geo.x(),current_geo.y(),current_geo.width(),current_geo.height()]
+            instance.config['geo'] = (current_geo.x(),current_geo.y(),current_geo.width(),current_geo.height())
             delete_item()
             self.__add_item(instance.config['item_type'], item_defs()[instance.config['item_type']], instance.config)
             
@@ -174,7 +174,7 @@ class EditingPopupService:
                 id = item.uuid,
                 item_type = item.config['item_type'],
                 conf = item.config['conf'],
-                geo = [geo.x(), geo.y(), geo.width(), geo.height()]
+                geo = (geo.x(), geo.y(), geo.width(), geo.height())
             ))
         self.__items = []
 

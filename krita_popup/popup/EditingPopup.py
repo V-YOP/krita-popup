@@ -13,7 +13,7 @@ class EditingPopup(QWidget):
     """
     The editing popup
     """
-    def __init__(self, items: list[tuple[QWidget, QRect, list[tuple[str, QAction]]]]) -> None:
+    def __init__(self, items: list[tuple[QWidget, QRect, list[QAction]]]) -> None:
         super().__init__(None)
         self.setAttribute(Qt.WA_TranslucentBackground, True) # 透明背景，必须和无边框结合使用
         self.setWindowFlag(Qt.FramelessWindowHint, True) # 无边框
@@ -116,7 +116,10 @@ class EditingPopup(QWidget):
         wrapper.interactive = False
         wrapper.setGeometry(self.__to_real_geo(relative_geo))
         wrapper.show()
+        if hasattr(wrapper.wrapped, 'on_show'):
+            getattr(wrapper.wrapped, 'on_show')()
         self.__items.append((wrapper, relative_geo, list(actions)))
+        
 
     def remove_item(self, widget: QWidget):
         """

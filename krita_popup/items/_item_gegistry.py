@@ -21,7 +21,8 @@ def RegistItem(name: str):
         raise RuntimeError(f'duplicate item name {name}')
     def go(registed_class): 
         assert issubclass(registed_class, QWidget), f'{name} must inherits from QWidget!'
-        _items[name] = registed_class
+        assert issubclass(registed_class, BaseItem), f'{name} must inherits from BaseItem!'
+        _items[name] = registed_class 
         return registed_class
     return go
 

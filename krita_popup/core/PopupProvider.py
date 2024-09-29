@@ -28,7 +28,7 @@ class PopupProvider:
         def state_changed(state: Qt.ApplicationState):
             if state == Qt.ApplicationInactive and self.is_popup_visible():
                 self.hide_popup()
-        QApplication.instance().applicationStateChanged.connect(state_changed)
+        QApplication.instance().applicationStateChanged.connect(state_changed) # type: ignore
         
 
     def __create_items_from_configuration(self, layout_idx: int):
@@ -48,6 +48,9 @@ class PopupProvider:
         return visible
 
     def __init_actions(self):
+        """
+        let the popup can listen shortcut
+        """
         action = Krita.instance().action(TOGGLE_ACTION_ID + str(0))
         if action is None or action in self.__popup.actions():
             return

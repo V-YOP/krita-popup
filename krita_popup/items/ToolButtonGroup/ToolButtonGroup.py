@@ -30,14 +30,6 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
             tools=[ToolEnum.KRITA_SHAPE_KIS_TOOL_BRUSH.object_name],
             horizontal=True,
         )
-
-    @staticmethod
-    def create(conf: ToolButtonGroupConfig):
-        return ToolButtonGroup(conf)
-    
-    def start_editing(self) -> ToolButtonGroupConfig | None:
-        return exec_editing_dialog(self.__config)
-        
     def __init__(self, config: ToolButtonGroupConfig) -> None:
         super().__init__()
         self.__config = config
@@ -57,6 +49,13 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
             btn_widget = self.__create_tool_button(tool)
             self.__button_widgets.append(btn_widget)
             self.__layout.addWidget(btn_widget)
+
+    @staticmethod
+    def create(conf: ToolButtonGroupConfig):
+        return ToolButtonGroup(conf)  # type: ignore
+    
+    def start_editing(self) -> ToolButtonGroupConfig | None:
+        return exec_editing_dialog(self.__config)
 
     def __create_tool_button(self, tool_enum: ToolEnum) -> QToolButton:
         btn = QToolButton(self)
@@ -87,6 +86,12 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
         for tool, button in zip(self.__tools, self.__button_widgets):
             button.setChecked(tool == new_tool)
     
+    def on_show(self):
+        print('me show')
+        return super().on_show()
+    def on_hide(self):
+        print('me hide')
+        return super().on_hide()
     # def custom_mask(self) -> QRegion:
     #     region = QRegion()
     #     region = region.united(QRect(0,0,30,30))

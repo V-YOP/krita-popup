@@ -1,7 +1,7 @@
 
 
 import json
-from typing import Any, NamedTuple, TypedDict
+from typing import Any, NamedTuple, Protocol, TypedDict
 from krita_popup.helper import singleton
 from krita_popup.helper import ToolEnum
 from krita import *

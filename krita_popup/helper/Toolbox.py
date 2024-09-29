@@ -54,6 +54,7 @@ class ToolEnum(Enum):
         self.cn_tooltip = cn_tooltip
 
     @cache
+    @staticmethod
     def from_object_name(object_name: str) -> 'ToolEnum':
         for enum in ToolEnum:
             if object_name == enum.object_name:
