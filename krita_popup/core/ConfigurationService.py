@@ -47,7 +47,7 @@ class ConfigurationService:
     Responsible for load and dump item configurations
     """
 
-    def load_configurations(self) -> list[ItemConfig]:
+    def load_configurations(self, layout_idx: int) -> list[ItemConfig]:
         """
         return item_id -> (item_type_name, item_configuration)
         """
@@ -55,10 +55,11 @@ class ConfigurationService:
             return DEBUG_CONFIG
         
         # TODO validate, filter all invalid settings
-        setting = Krita.instance().readSetting('krita_popup', 'layout0', '[]')
+        setting = Krita.instance().readSetting('krita_popup', f'layout{layout_idx}', '[]')
+        print(f'{layout_idx=}, {setting=}')
         return json.loads(setting)
     
-    def save_configurations(self, settings: list[ItemConfig]):
+    def save_configurations(self, layout_idx: int, settings: list[ItemConfig]):
         """
         save settings, items whose size is empty will be removed
         """
@@ -68,4 +69,4 @@ class ConfigurationService:
             _, _, w, h = setting['geo']
             if w * h != 0:
                 filtered_settings.append(setting)
-        Krita.instance().writeSetting('krita_popup', 'layout0', json.dumps(filtered_settings))
+        Krita.instance().writeSetting('krita_popup', f'layout{layout_idx}', json.dumps(filtered_settings))

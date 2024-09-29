@@ -28,10 +28,8 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
     def start_editing(self) -> KritaDockBorrowerConfig | None:
         ...
 
-
     def __init__(self, dock_widget: DockWidget) -> None:
         super().__init__(None)
-        ...
         self.__borrowed_widget = None
         self.__dock_widget = dock_widget
         self.__placeholder = QLabel('Borrowed')

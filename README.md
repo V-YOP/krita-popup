@@ -6,8 +6,8 @@ TODO there should be a gif
 
 This popup is configurable, Many type of widgets can be placed and configured on it, including:
 
-1. [X] Dockers those krita provided(multiple window support...?)
-2. [X] Tools
+1. [X] Tools
+2. [ ] Dockers those krita provided (multiple window support...?)
 3. [ ] (checkable) Actions like eraser mode, mirror.
 4. [ ] Specific Brushes and other resources
 5. [ ] A minimal tool option which will change with current tool
@@ -18,6 +18,8 @@ This popup is configurable, Many type of widgets can be placed and configured on
 TODO:
 
 1. [X] Add Widgets in editing mode
-2. [ ] Fixed item (always displayed at specific locations nomatter where the cursor is)
-3. [\] widget configuration panel (actually, i don't wanna do it)
-4. [ ] multiple layout change
+2. [X] Edit item (item specific)
+3. [X] custom mask for items
+4. [X] multiple layout 
+5. [ ] document
+6. [ ] Fixed item (always displayed at specific locations nomatter where the cursor is)

@@ -1,3 +1,4 @@
+from functools import partial
 from krita import *
 from krita_popup.constants import TOGGLE_ACTION_ID
 from krita_popup.core import PopupProvider
@@ -18,46 +19,24 @@ class KritaPopupExtension(Extension):
         self.menu = QMenu('Krita Popup', window.qwindow())
         menu_action.setMenu(self.menu)
 
-        setting_action = window.createAction("krita_pupup_edit_popup", "Edit Popup", "tools/krita_popup_menu")
-        setting_action.triggered.connect(lambda: self.__popup_provider.start_editing())
+        for i in range(0, 10):
+            setting_action = window.createAction(f"krita_pupup_edit_popup{i}", f"Edit Popup {i}", "tools/krita_popup_menu")
+            setting_action.triggered.connect(partial(self.start_editing, i))
 
-        self.toggle_action = window.createAction(TOGGLE_ACTION_ID, 'Toggle Popup', 'tools/krita_popup_menu')
-        self.toggle_action.triggered.connect(self.toggle_popup)
-
-
-    def toggle_popup(self):
-        self.__popup_provider.set_popup_visible(not self.__popup_provider.is_popup_visible())
-        # import importlib
-        # if not hasattr(self, 'popup1'):
-        #     from krita_popup.items.ToolButtonGroup import ToolButtonGroup, ToolButtonGroupConfig
-            
-        #     tools = ToolButtonGroup(ToolButtonGroupConfig(
-        #         tools=[ToolEnum.KRITA_SHAPE_KIS_TOOL_BRUSH.object_name, ToolEnum.KIS_TOOL_CROP.object_name],horizontal=True,
-        #     ))
-        #     tools_rect = QRect(0, 0, 200, 100)
-        #     tools_rect.moveCenter(QPoint(0, -150))
-
-        #     tool_option_rect = QRect(0,0,400, 800)
-        #     tool_option_rect.moveCenter(QPoint(300, 0))
-        #     print(tool_option_rect)
-        #     # self.popup = Popup([
-        #     #     (tools, tools_rect),
-        #     # ], under_cursor=True)
-        #     self.popup.addAction(self.toggle_action) # make sure popup can listen shortcut
-        #     def state_changed(state: Qt.ApplicationState):
-        #         if state == Qt.ApplicationInactive:
-        #             self.popup.hide()
-        #             self.toggle_action.setChecked(False)
-        #     QApplication.instance().applicationStateChanged.connect(state_changed)
-        #     self.popup.clear_items()
-        #     self.popup.add_item(tools, tools_rect)
-        #     self.popup1='xx'
-        
-        # if self.toggle_action.isChecked():
-        #     self.popup.show()
-        #     QTimer.singleShot(0, lambda: QApplication.setActiveWindow(Krita.instance().activeWindow().qwindow())) # re-focus krita window
-        # else:
-        #     self.popup.hide()
+            toggle_action = window.createAction(TOGGLE_ACTION_ID + str(i), f'Toggle Popup {i}', 'tools/krita_popup_menu')
+            toggle_action.triggered.connect(partial(self.toggle_popup, i))
+    
+    def start_editing(self, layout_idx: int):
+        if not Krita.instance().documents():
+            return
+        self.__popup_provider.start_editing(layout_idx)
+    def toggle_popup(self, layout_idx: int):
+        if not Krita.instance().documents():
+            return
+        if self.__popup_provider.is_popup_visible(layout_idx):
+            self.__popup_provider.hide_popup()
+        else:
+            self.__popup_provider.show_popup(layout_idx)
 
 
 # And add the extension to Krita's list of extensions:
