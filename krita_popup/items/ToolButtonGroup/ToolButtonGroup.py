@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtGui import QKeyEvent, QRegion
 from krita_popup.helper.QtAll import *
 from krita_popup.helper import Toolbox, ToolEnum
 from krita import *
@@ -49,8 +49,9 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
 
         self.__layout = QHBoxLayout() if config['horizontal'] else QVBoxLayout()
         self.setLayout(self.__layout)
-        self.__layout.setSpacing(0)
-
+        self.__layout.setSpacing(0) # remove item spacing
+        self.__layout.setContentsMargins(0,0,0,0) # remove margin
+        
         for tool in self.__tools:
             # each tool a button
             btn_widget = self.__create_tool_button(tool)
@@ -86,8 +87,7 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
         for tool, button in zip(self.__tools, self.__button_widgets):
             button.setChecked(tool == new_tool)
     
-    def on_show(self):
-        print('me show!')
-    def on_hide(self):
-        print('me hide!')
-
+    # def custom_mask(self) -> QRegion:
+    #     region = QRegion()
+    #     region = region.united(QRect(0,0,30,30))
+    #     return region

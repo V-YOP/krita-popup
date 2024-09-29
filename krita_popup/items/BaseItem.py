@@ -1,4 +1,5 @@
-from typing import Generic, Protocol, TypeVar
+from typing import Generic, TypeVar
+from PyQt5.QtGui import QRegion
 
 def false_me() -> None:
     return False
@@ -10,7 +11,7 @@ T = TypeVar('T')
 
 class BaseItem(Generic[T]):
     """
-    Item interface, **must be inherited**, listen popup show, hide and editing me.
+    Item interface, **must be inherited**, listen popup show, hide and editing me. subclasses must implement `default_conguration`, `create` and `start_editing` method, and can implement `on_show`, `on_hide`, `custom_mask` method if necessary. 
     
     T: Configuration Class, **must be Json serializable and deserializable**
     """
@@ -19,6 +20,7 @@ class BaseItem(Generic[T]):
         """
         A default configuration
         """
+        raise NotImplementedError()
 
     @staticmethod
     def create(configuration: T) -> 'Self':
@@ -27,6 +29,7 @@ class BaseItem(Generic[T]):
         
         configuration: A configuration class
         """
+        raise NotImplementedError()
 
     def start_editing(self) -> T | None:
         """
@@ -34,6 +37,7 @@ class BaseItem(Generic[T]):
 
         subclass **has no need** to update itself with new configuration, it will be deleted (on_hide method will be invoked) and then recreated. 
         """
+        raise NotImplementedError()
 
     def on_show(self): 
         """
@@ -45,3 +49,8 @@ class BaseItem(Generic[T]):
         Invoked when popup hides and deleted from editing popup
         """
     
+    def custom_mask(self) -> QRegion:
+        """
+        return a QRegion as mask
+        """
+        return NotImplemented

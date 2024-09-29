@@ -8,7 +8,11 @@ from .PopupItem import PopupItem
 
 class Popup(QWidget):
     """
-    The Real displayed popop widget, innocent to Krita for purity, use show and hide method to toggle display
+    The Real displayed popop widget, innocent to Krita for purity, use show and hide method to toggle display.
+
+    will check if item has method `on_show` and `on_hide`, which will be invokd without arguments if exists.
+
+    custom mask for items is supported, just create method `custom_mask` which returns the mask
     """
 
     def __init__(self, 
@@ -39,7 +43,12 @@ class Popup(QWidget):
     def refresh_mask(self):
         self.__mask = QRegion()
         for item, _ in self.__items:
-            self.__mask = self.__mask.united(item.geometry())
+            if hasattr(item.wrapped, 'custom_mask') and (res := item.wrapped.custom_mask()) is not NotImplemented and res is not None:
+                region: QRegion = res
+                region.translate(item.pos())
+                self.__mask = self.__mask.united(region)
+            else:
+                self.__mask = self.__mask.united(item.geometry())
         self.setMask(self.__mask)
 
     def add_item(self, widget: QWidget, relative_geo: QRect):

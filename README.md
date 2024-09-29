@@ -8,9 +8,9 @@ This popup is configurable, Many type of widgets can be placed and configured on
 
 1. [X] Dockers those krita provided(multiple window support...?)
 2. [X] Tools
-3. [ ] A minimal tool option which will change with current tool
+3. [ ] (checkable) Actions like eraser mode, mirror.
 4. [ ] Specific Brushes and other resources
-5. [ ] (checkable) Actions like eraser mode, mirror.
+5. [ ] A minimal tool option which will change with current tool
 6. [ ] View States, like brush size, flow
 7. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
 8. [ ] Menus, like the top menu and submenu within it like 'Filter'
