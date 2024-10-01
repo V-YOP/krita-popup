@@ -5121,7 +5121,7 @@ class Preset(QObject):
     ...
   
 
-class PresetChooser(KisPresetChooser):
+class PresetChooser(KisPresetChooser, QWidget):
 
   """
     The [PresetChooser](https://api.kde.org/krita/html/classPresetChooser.html) widget wraps the KisPresetChooser widget. The widget provides for selecting brush presets. It has a tagging bar and a filter field. It is not automatically synchronized with the currently selected preset in the current Windows.

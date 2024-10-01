@@ -1,17 +1,15 @@
 from typing import TypedDict
-from PyQt5.QtGui import QResizeEvent
 from krita import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QWidget
 from krita_popup.helper import DockerEnum, form
+from krita_popup.helper.QtAll import *
 
 from ._item_gegistry import RegistItem
 from .BaseItem import BaseItem
 
 class KritaDockBorrowerConfig(TypedDict):
     object_name: str
+    transparent_background: bool
 
 @RegistItem('Docker Borrower')
 class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
@@ -21,12 +19,11 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
 
     @staticmethod
     def default_configuration() -> KritaDockBorrowerConfig:
-        return KritaDockBorrowerConfig(object_name='KisLayerBox')
+        return KritaDockBorrowerConfig(object_name='KisLayerBox', transparent_background=False)
 
     @staticmethod
     def create(conf: KritaDockBorrowerConfig):
-        print('create me!')
-        return KritaDockBorrower(conf['object_name'])  # type: ignore
+        return KritaDockBorrower(conf)  # type: ignore
     
     def __get_docker_defs(self):
         """
@@ -39,12 +36,12 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
                 # is krita internal dockers
                 res.append((f'{enum.cn_name}/{enum.en_name}', enum.object_name))
             else:
-                res.append((docker.objectName(), docker.objectName()))
+                res.append((docker.windowTitle(), docker.objectName()))
         return res
 
     def start_editing(self) -> KritaDockBorrowerConfig | None:
         docker_defs = self.__get_docker_defs()
-        current_docker_desc= next(i[0] for i in docker_defs if i[1] == self.__object_name)
+        current_docker_desc = next(i[0] for i in docker_defs if i[1] == self.__object_name)
         config = [
             form.DropdownField(
                 type = 'dropdown',
@@ -52,20 +49,31 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
                 label='Docker',
                 items=[i[0] for i in docker_defs],
                 defaultValue=current_docker_desc
+            ),
+            form.CheckboxField(
+                type='checkbox',
+                field='transparent_background',
+                label='',
+                defaultValue=['Transparent Background'] if self.__transparent_background else [],
+                items=['Transparent Background']
             )
         ]
         result = form.exec_form_dialog(config, True)
         if not result:
             return None
-        
+        print(result)
         desc: str = result['desc'] # type: ignore
+        transparent_background = bool(result['transparent_background'])
+
         return KritaDockBorrowerConfig(
-            object_name=next(i[1] for i in docker_defs if i[0] == desc)
+            object_name=next(i[1] for i in docker_defs if i[0] == desc),
+            transparent_background=transparent_background,
         )
 
-    def __init__(self, docker_object_name: str) -> None:
+    def __init__(self, conf: KritaDockBorrowerConfig) -> None:
         super().__init__(None)
-        self.__object_name = docker_object_name
+        self.__object_name = conf['object_name']
+        self.__transparent_background = conf['transparent_background']
 
         self.__dock_widget: QDockWidget | None = None
         self.__borrowed_widget: QWidget | None = None
@@ -90,8 +98,11 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
         # do not store dock_widget for possible multiple window
         self.__dock_widget = self.__get_dock_widget()
         self.__borrowed_widget = self.__dock_widget.widget()
-        self.setAutoFillBackground(True)
-        self.setPalette(Krita.instance().activeWindow().qwindow().palette())
+
+        if not self.__transparent_background:
+            self.setAutoFillBackground(True)
+            self.setPalette(Krita.instance().activeWindow().qwindow().palette())
+
         self.__dock_widget.setWidget(self.__placeholder)
         self.__borrowed_widget.setParent(self)
         qInfo(f'{self.__borrowed_widget.geometry()=}')

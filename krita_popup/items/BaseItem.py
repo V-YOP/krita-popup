@@ -35,6 +35,14 @@ class BaseItem(Generic[T]):
         """
         return edited configuration, return None if no editing. 
 
+        If you need to show a dialog, make sure the dialog has no parents and is stay on top, eg:
+
+        ```
+        dialog = QDialog(None) # must be None, don't leave it empty
+        dialog.setWindowFlag(Qt.WindowStaysOnTopHint, True)
+        dialog.raise_()
+        ``` 
+
         subclass **has no need** to update itself with new configuration, it will be deleted (on_hide method will be invoked) and then recreated. 
         """
         raise NotImplementedError()

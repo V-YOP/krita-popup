@@ -20,12 +20,13 @@ class KritaPopupExtension(Extension):
         menu_action.setMenu(self.menu)
 
         for i in range(0, 10):
+            toggle_action = window.createAction(TOGGLE_ACTION_ID + str(i), f'Toggle Popup {i}', 'tools/krita_popup_menu')
+            toggle_action.triggered.connect(partial(self.toggle_popup, i))
+            
+        for i in range(0, 10):
             setting_action = window.createAction(f"krita_pupup_edit_popup{i}", f"Edit Popup {i}", "tools/krita_popup_menu")
             setting_action.triggered.connect(partial(self.start_editing, i))
 
-            toggle_action = window.createAction(TOGGLE_ACTION_ID + str(i), f'Toggle Popup {i}', 'tools/krita_popup_menu')
-            toggle_action.triggered.connect(partial(self.toggle_popup, i))
-    
     def start_editing(self, layout_idx: int):
         if not Krita.instance().documents():
             return

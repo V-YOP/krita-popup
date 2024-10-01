@@ -142,12 +142,6 @@ class EditingPopup(QWidget):
             self.remove_item(wrapper.wrapped)
         self.__items[:] = []
 
-    def items(self):
-        """
-        return widget and real relative_geo pairs
-        """
-        return [(i.wrapped, self.__to_relative_geo(i.geometry())) for i, _ in self.__items]
-    
     def show(self):
         for item, *_ in self.__items:
             if hasattr(item.wrapped, 'on_show'):

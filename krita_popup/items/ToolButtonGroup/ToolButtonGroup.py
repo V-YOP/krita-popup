@@ -30,6 +30,11 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
             tools=[ToolEnum.KRITA_SHAPE_KIS_TOOL_BRUSH.object_name],
             horizontal=True,
         )
+    
+    @staticmethod
+    def create(conf: ToolButtonGroupConfig):
+        return ToolButtonGroup(conf)  # type: ignore
+    
     def __init__(self, config: ToolButtonGroupConfig) -> None:
         super().__init__()
         self.__config = config
@@ -50,10 +55,6 @@ class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
             self.__button_widgets.append(btn_widget)
             self.__layout.addWidget(btn_widget)
 
-    @staticmethod
-    def create(conf: ToolButtonGroupConfig):
-        return ToolButtonGroup(conf)  # type: ignore
-    
     def start_editing(self) -> ToolButtonGroupConfig | None:
         return exec_editing_dialog(self.__config)
 

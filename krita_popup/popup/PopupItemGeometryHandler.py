@@ -1,3 +1,4 @@
+# type: ignore
 from typing import Literal, Optional
 from PyQt5.QtCore import *
 from PyQt5.QtCore import Qt
@@ -38,7 +39,7 @@ class PopupItemGeometryHandler:
             return vertical_label
         if close_to_vertical_border and not close_to_horizontal_border:
             return horizontal_label
-        return f'{horizontal_label}{vertical_label}'
+        return f'{horizontal_label}{vertical_label}' # type: ignore
 
     def __setting_cursor(self, child_widget: QWidget, event: QMouseEvent):
         # 鼠标移动出组件时，重设光标
