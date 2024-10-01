@@ -11,13 +11,18 @@ from krita_popup.helper.QtAll import *
 @singleton
 class PopupProvider:
     """
-    The guy who makes his hand dirty handling everything about popup including toggle, edit, configuration r/w
+    The guy who makes his hand dirty handling everything about popup including toggle, edit, configuration r/w.
+
+    Actually, there's two popup displaying, one is always fixed to screen, one is always under control.
     """
 
     def __init__(self) -> None:
         self.__editing_popup_service = EditingPopupService()
         self.__configuration_service = ConfigurationService()
-        self.__popup = Popup([], under_cursor=True)
+
+        self.__under_cursor_popup = Popup([], under_cursor=True)
+        self.__fixed_popup = Popup([], under_cursor=False)
+
         self.__notifier = Krita.instance().notifier()
         self.__notifier.setActive(True)
         self.__current_layout_idx: int | None = None
@@ -42,7 +47,7 @@ class PopupProvider:
         return items
 
     def is_popup_visible(self, layout_idx: int | None = None):
-        visible = self.__popup.isVisible()
+        visible = self.__under_cursor_popup.isVisible()
         if layout_idx is not None:
             return visible and layout_idx == self.__current_layout_idx
         return visible
@@ -52,27 +57,37 @@ class PopupProvider:
         let the popup can listen shortcut
         """
         action = Krita.instance().action(TOGGLE_ACTION_ID + str(0))
-        if action is None or action in self.__popup.actions():
+        if action is None or action in self.__under_cursor_popup.actions():
             return
         for i in range(0, 10):
             action = Krita.instance().action(TOGGLE_ACTION_ID + str(i))
-            self.__popup.addAction(action)
+            self.__under_cursor_popup.addAction(action)
+            self.__fixed_popup.addAction(action)
 
     def show_popup(self, layout_idx: int):
         self.__init_actions()
-        self.__popup.hide()
-        self.__popup.clear_items()
+        
+        self.__under_cursor_popup.hide()
+        self.__under_cursor_popup.clear_items()
+        self.__fixed_popup.hide()
+        self.__fixed_popup.clear_items()
         self.__current_layout_idx = layout_idx
         items = self.__create_items_from_configuration(layout_idx)
-        print(items)
         for item in items:
-            self.__popup.add_item(item.widget, item.geo)
-        self.__popup.show()
+            if item.config.get('fixed', False):
+                self.__fixed_popup.add_item(item.widget, item.geo)
+            else:
+                self.__under_cursor_popup.add_item(item.widget, item.geo)
+
+        self.__fixed_popup.show()
+        self.__under_cursor_popup.show() # under cursor popup should be beyond fiexd popup
         QTimer.singleShot(0, lambda: QApplication.setActiveWindow(Krita.instance().activeWindow().qwindow())) # re-focus krita window
 
     def hide_popup(self):
-        self.__popup.hide()
-        self.__popup.clear_items()
+        self.__under_cursor_popup.hide()
+        self.__under_cursor_popup.clear_items()
+        self.__fixed_popup.hide()
+        self.__fixed_popup.clear_items()
         self.__current_layout_idx = None
 
     def start_editing(self, layout_idx: int):

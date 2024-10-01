@@ -24,6 +24,6 @@ TODO:
 2. [X] Edit item (item specific)
 3. [X] custom mask for items
 4. [X] multiple layout 
-5. [ ] documentation
-6. [ ] Fixed item (always displayed at specific locations nomatter where the cursor is)
+5. [X] Fixed item (always displayed at specific locations nomatter where the cursor is)
+6. [ ] documentation
 

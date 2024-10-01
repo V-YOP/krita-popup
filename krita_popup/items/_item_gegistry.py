@@ -1,6 +1,6 @@
 from dataclasses import is_dataclass
 from typing import Protocol
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QWidget
 from .BaseItem import BaseItem
 
 _items: dict[str, type[BaseItem]] = {}

@@ -33,7 +33,6 @@ class ViewState(QObject):
         if self.__last_preset is None or self.__last_preset.name() != current.name():
             self.currentBrushChanged.emit(current)
             self.__last_preset = current
-            print('brush changed: ', current.name())
 
     def __loop_me(self):
         if self.__stop_loop:

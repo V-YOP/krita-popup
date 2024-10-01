@@ -91,6 +91,7 @@ class EditingPopupService:
                 id=id,
                 item_type=item_type_name,
                 conf=config,
+                fixed=False,
                 geo=geo,
             ),
             widget=instance,
@@ -106,6 +107,14 @@ class EditingPopupService:
         signal.connect(go)
 
     def __item_actions(self, instance: ItemInstance) -> list[QAction]:
+        set_fixed_action = QAction()
+        set_fixed_action.setText('Fixed')
+        set_fixed_action.setCheckable(True)
+        set_fixed_action.setChecked(instance.config.get('fixed', False))
+        def set_fixed():
+            instance.config['fixed'] = set_fixed_action.isChecked()
+        set_fixed_action.triggered.connect(set_fixed)
+
         delete_action = QAction()
         delete_action.setText('Delete')
         def delete_item():
@@ -128,9 +137,9 @@ class EditingPopupService:
             delete_item()
             self.__add_item(instance.config['item_type'], item_defs()[instance.config['item_type']], instance.config)
             
-
         edit_action.triggered.connect(edit_item)
         return [
+            set_fixed_action,
             edit_action,
             delete_action,
         ]
@@ -166,15 +175,12 @@ class EditingPopupService:
         result = []
         for item in self.__items:
             geo = self.__popup.relative_geometry(item.widget)
-            print(f'{item.widget.geometry()=}')
-            print(f'relative {geo=}')
-            print(f'{self.__popup.geometry()=}')
-            print(f'{self.__popup.geometry().center()=}')
             result.append(ItemConfig(
                 id = item.uuid,
                 item_type = item.config['item_type'],
                 conf = item.config['conf'],
-                geo = (geo.x(), geo.y(), geo.width(), geo.height())
+                geo = (geo.x(), geo.y(), geo.width(), geo.height()),
+                fixed = item.config.get('fixed', False),
             ))
         self.__items = []
 

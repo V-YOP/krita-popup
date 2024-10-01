@@ -11,6 +11,7 @@ class ItemConfig(TypedDict):
     id: str
     item_type: str
     conf: dict
+    fixed: bool
     geo: tuple[int,int,int,int]
 
 class ItemInstance(NamedTuple):
@@ -21,7 +22,7 @@ class ItemInstance(NamedTuple):
 
 DEBUG = False
 DEBUG_CONFIG: list[ItemConfig] = [
-    ItemConfig(id='horizontal_test', item_type='Tool Button Group', geo=(-200,-150,400,100), conf=dict(
+    ItemConfig(id='horizontal_test', item_type='Tool Button Group', fixed=False, geo=(-200,-150,400,100), conf=dict(
         tools=[i.object_name for i in [
             ToolEnum.KIS_TOOL_SELECT_OUTLINE,
             ToolEnum.KIS_TOOL_SELECT_ELLIPTICAL,
@@ -30,7 +31,7 @@ DEBUG_CONFIG: list[ItemConfig] = [
         ]],
         horizontal=True,
     )),
-    ItemConfig(id='vertical_test', item_type='Tool Button Group', geo=(200,-200,100,400), conf=dict(
+    ItemConfig(id='vertical_test', item_type='Tool Button Group', fixed=False, geo=(200,-200,100,400), conf=dict(
         tools=[i.object_name for i in [
             ToolEnum.KIS_TOOL_SELECT_OUTLINE,
             ToolEnum.KIS_TOOL_SELECT_ELLIPTICAL,
