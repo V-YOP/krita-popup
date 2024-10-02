@@ -25,7 +25,7 @@ QToolButton:checked {
 
 
 @RegistItem('Brush Group')
-class BrushGroup(QWidget, BaseItem[BrushGroupConfig]):
+class BrushGroup(BaseItem[BrushGroupConfig]):
     @staticmethod
     def default_configuration() -> BrushGroupConfig:
         return BrushGroupConfig(

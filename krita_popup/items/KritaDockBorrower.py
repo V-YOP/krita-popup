@@ -12,7 +12,7 @@ class KritaDockBorrowerConfig(TypedDict):
     transparent_background: bool
 
 @RegistItem('Docker Borrower')
-class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
+class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
     """
     borrow krita's docker content
     """
@@ -108,7 +108,6 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
         qInfo(f'{self.__borrowed_widget.geometry()=}')
         self.__borrowed_widget.setGeometry(self.rect())
         self.__borrowed_widget.show()
-        self.show()
 
     def return_back(self):
         if not self.__borrowed_widget or not self.__dock_widget:
@@ -116,14 +115,11 @@ class KritaDockBorrower(QWidget, BaseItem[KritaDockBorrowerConfig]):
         self.__dock_widget.setWidget(self.__borrowed_widget)
         self.__borrowed_widget = None
         self.__dock_widget = None
-        self.hide()
 
     def on_show(self):
-        print('borrow me!')
         self.borrow()
 
     def on_hide(self):
-        print('return me!')
         self.return_back()
         
 if __name__ == '__main__':

@@ -9,12 +9,12 @@ This popup is configurable, Many type of widgets can be placed and configured on
 1. [X] Tools
 2. [X] Dockers those krita provided (multiple window support...?)
 3. [x] Brushes
-4. [ ] other resources rather than brushes
-5. [ ] (checkable) Actions like eraser mode, mirror.
-6. [ ] A minimal tool option which will change with current tool
-7. [ ] View States, like brush size, flow
-8. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
-9. Menus
+4. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
+6. [ ] View States, like brush size, flow
+7. [ ] (checkable) Actions like eraser mode, mirror.
+8. [ ] A minimal tool option which will changes corresponding with current tool (mark: must get the shardtooldocker's widget in `__init__`)
+9. [ ] other resources rather than brushes
+10. Menus
    1. [X] main menu 
    2. [ ] submenu within main menu like 'Filter'
 
@@ -25,5 +25,8 @@ TODO:
 3. [X] custom mask for items
 4. [X] multiple layout 
 5. [X] Fixed item (always displayed at specific locations nomatter where the cursor is)
-6. [ ] documentation
+7. [ ] documentation
 
+known bugs:
+
+1. [ ] when focus on popup, all shortcuts will lose. 

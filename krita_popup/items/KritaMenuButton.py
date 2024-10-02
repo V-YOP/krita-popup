@@ -25,7 +25,7 @@ class MainMenuButtonConfig(TypedDict):
     pass
 
 @RegistItem('Krita Menu Button')
-class KritaMenuButton(QWidget, BaseItem[MainMenuButtonConfig]):
+class KritaMenuButton(BaseItem[MainMenuButtonConfig]):
     @staticmethod
     def default_configuration() -> MainMenuButtonConfig:
         return MainMenuButtonConfig()

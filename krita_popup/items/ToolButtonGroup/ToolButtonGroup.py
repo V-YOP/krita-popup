@@ -23,7 +23,7 @@ QToolButton:checked {
 
 
 @RegistItem('Tool Button Group')
-class ToolButtonGroup(QWidget, BaseItem[ToolButtonGroupConfig]):
+class ToolButtonGroup(BaseItem[ToolButtonGroupConfig]):
     @staticmethod
     def default_configuration() -> ToolButtonGroupConfig:
         return ToolButtonGroupConfig(

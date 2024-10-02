@@ -59,8 +59,7 @@ class PopupProvider:
         action = Krita.instance().action(TOGGLE_ACTION_ID + str(0))
         if action is None or action in self.__under_cursor_popup.actions():
             return
-        for i in range(0, 10):
-            action = Krita.instance().action(TOGGLE_ACTION_ID + str(i))
+        for action in Krita.instance().actions():
             self.__under_cursor_popup.addAction(action)
             self.__fixed_popup.addAction(action)
 
