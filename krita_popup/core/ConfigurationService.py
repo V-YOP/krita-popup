@@ -20,6 +20,9 @@ class ItemInstance(NamedTuple):
     widget: QWidget
     geo: QRect
 
+class PluginConfig(TypedDict):
+    pass
+
 DEBUG = False
 DEBUG_CONFIG: list[ItemConfig] = [
     ItemConfig(id='horizontal_test', item_type='Tool Button Group', fixed=False, geo=(-200,-150,400,100), conf=dict(
@@ -48,7 +51,21 @@ class ConfigurationService:
     Responsible for load and dump item configurations
     """
 
-    def load_configurations(self, layout_idx: int) -> list[ItemConfig]:
+    @staticmethod
+    def default_plugin_config():
+        return PluginConfig()
+    
+    def load_plugin_config(self):
+        setting = Krita.instance().readSetting('krita_popup', f'global_config', json.dumps(ConfigurationService.default_plugin_config()))
+        return json.loads(setting)
+    
+    def save_plugin_config(self, conf: PluginConfig):
+        # TODO validate
+        Krita.instance().writeSetting('krita_popup', f'global_config', json.dumps(conf))
+
+
+
+    def load_item_configs(self, layout_idx: int) -> list[ItemConfig]:
         """
         return item_id -> (item_type_name, item_configuration)
         """
@@ -60,7 +77,7 @@ class ConfigurationService:
         print(f'{layout_idx=}, {setting=}')
         return json.loads(setting)
     
-    def save_configurations(self, layout_idx: int, settings: list[ItemConfig]):
+    def save_item_configs(self, layout_idx: int, settings: list[ItemConfig]):
         """
         save settings, items whose size is empty will be removed
         """

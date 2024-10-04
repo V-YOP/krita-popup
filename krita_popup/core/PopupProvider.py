@@ -38,7 +38,7 @@ class PopupProvider:
 
     def __create_items_from_configuration(self, layout_idx: int):
         item_def = item_defs()
-        confs = self.__configuration_service.load_configurations(layout_idx)
+        confs = self.__configuration_service.load_item_configs(layout_idx)
         items: list[ItemInstance] = []
         for conf in confs:
             item_type, id, geo = conf['item_type'], conf['id'], conf['geo']
@@ -78,8 +78,8 @@ class PopupProvider:
             else:
                 self.__under_cursor_popup.add_item(item.widget, item.geo)
 
+        self.__under_cursor_popup.show() # fiexd popup should beyonds to under cursor popup 
         self.__fixed_popup.show()
-        self.__under_cursor_popup.show() # under cursor popup should be beyond fiexd popup
         QTimer.singleShot(0, lambda: QApplication.setActiveWindow(Krita.instance().activeWindow().qwindow())) # re-focus krita window
 
     def hide_popup(self):
@@ -100,4 +100,4 @@ class PopupProvider:
         if new_items is None:
             return # user click cancel, don't do anything
         
-        self.__configuration_service.save_configurations(layout_idx, new_items)
+        self.__configuration_service.save_item_configs(layout_idx, new_items)

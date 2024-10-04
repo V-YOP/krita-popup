@@ -1,6 +1,6 @@
 # Krita Popup
 
-Provide a configurable Popup widget which can be triggered with shortcuts displaying under cursor or at specific locations. This plugin is determined to **minimalize hand movements** while painting, striking a balance between keyboard shortcuts and mouse. **still in development**.
+Provide a configurable Popup widget which can be triggered with shortcuts displaying under cursor or at specific locations. This plugin is determined to **minimalize hand movements** while painting, striking a balance between keyboard shortcuts and mouse. **STILL IN DEVELOPMENT, ONLY TESTED ON WINDOWS 10**.
 
 ![](./intro_0.gif)
 
@@ -39,6 +39,7 @@ This popup is configurable, Many type of widgets can be placed and configured on
 4. [X] multiple layout 
 5. [X] Fixed item (always displayed at specific locations nomatter where the cursor is)
 6. Add Settings to popup (need to add a new class for handling popup's display)
-   1. [ ] when cursor is very close to last position when popup is showed, show popup at the old position
+   1. [ ] when cursor is very close to last position when popup is showed (or cursor is on a same item), show popup at the old position
    2. [ ] Add an "alive zone" (corresponding to "deadzone") to popup, limit the center's position
 7. [ ] documentation
+
