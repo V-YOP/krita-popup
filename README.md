@@ -2,9 +2,9 @@
 
 Provide a configurable Popup widget which can be triggered with shortcuts displaying under cursor or at specific locations. This plugin is determined to **minimalize hand movements** while painting, striking a balance between keyboard shortcuts and mouse. **still in development**.
 
-![](./krita_popup/intro_0.gif)
+![](./intro_0.gif)
 
-![](./krita_popup/intro_1.gif)
+![](./intro_1.gif)
 
 This popup is configurable, Many type of widgets can be placed and configured on it, including:
 
@@ -12,12 +12,12 @@ This popup is configurable, Many type of widgets can be placed and configured on
 2. [X] Dockers those krita provided (multiple window support...?)
 3. [x] Brushes
 4. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
-6. [ ] View States, like brush size, flow
-7. [ ] (checkable) Actions like eraser mode, mirror.
-8. [ ] A minimal tool option which will changes corresponding with current tool (mark: must get the shardtooldocker's widget in `__init__`)
-9. [ ] other resources rather than brushes
-10. [X] main menu button
-11. [ ] submenu within main menu like 'Filter'
+5. [ ] View States, like brush size, flow
+6. [ ] (checkable) Actions like eraser mode, mirror.
+7. [ ] A minimal tool option which will changes corresponding with current tool (mark: must get the shardtooldocker's widget in `__init__`)
+8. [ ] other resources rather than brushes
+9.  [X] main menu button
+10. [ ] submenu within main menu like 'Filter'
 
 # Install
 
