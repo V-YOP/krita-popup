@@ -26,6 +26,102 @@
             <isCheckable>false</isCheckable>
             <statusTip/>
         </Action>
+        <Action name="krita_popup_toggle2">
+            <icon/>
+            <text>Toggle display of the popup 2</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle3">
+            <icon/>
+            <text>Toggle display of the popup 3</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle4">
+            <icon/>
+            <text>Toggle display of the popup 4</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle5">
+            <icon/>
+            <text>Toggle display of the popup 5</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle6">
+            <icon/>
+            <text>Toggle display of the popup 6</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle7">
+            <icon/>
+            <text>Toggle display of the popup 7</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle8">
+            <icon/>
+            <text>Toggle display of the popup 8</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
+        <Action name="krita_popup_toggle9">
+            <icon/>
+            <text>Toggle display of the popup 9</text>
+            <whatsThis></whatsThis>
+            <toolTip></toolTip>
+            <iconText></iconText>
+            <activationFlags>0</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip/>
+        </Action>
     </Actions>
 </ActionCollection>
 

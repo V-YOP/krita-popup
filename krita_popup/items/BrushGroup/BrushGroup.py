@@ -47,7 +47,6 @@ class BrushGroup(BaseItem[BrushGroupConfig]):
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.__button_widgets: list[QToolButton] = []
         self.__resources: list[Resource] = []
-
         self.__layout = QHBoxLayout() if config['horizontal'] else QVBoxLayout()
         self.setLayout(self.__layout)
         self.__layout.setSpacing(0) # remove item spacing
