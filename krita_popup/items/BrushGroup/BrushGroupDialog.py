@@ -89,7 +89,7 @@ def exec_editing_dialog(setting: BrushGroupConfig) -> BrushGroupConfig | None:
     def from_str(name: str) -> Resource | None:
         return Krita.instance().resources('preset').get(name)
     dialog = QDialog(None)
-    dialog.resize(600, 800)
+    dialog.resize(1200, 800)
     dialog.setWindowFlag(Qt.WindowStaysOnTopHint, True)
     dialog.raise_()
 

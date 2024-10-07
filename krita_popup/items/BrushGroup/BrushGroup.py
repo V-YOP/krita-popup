@@ -23,7 +23,6 @@ QToolButton:checked {
 }
 """.strip()
 
-
 @RegistItem('Brush Group')
 class BrushGroup(BaseItem[BrushGroupConfig]):
     @staticmethod
@@ -34,7 +33,7 @@ class BrushGroup(BaseItem[BrushGroupConfig]):
         )
     
     @staticmethod
-    def create(conf: BrushGroupConfig):
+    def create(conf: BrushGroupConfig, editing_mode: bool):
         return BrushGroup(conf)  # type: ignore
     
     def start_editing(self) -> BrushGroupConfig | None:
@@ -129,4 +128,3 @@ class BrushGroup(BaseItem[BrushGroupConfig]):
     #     """
     #     for tool, button in zip(self.__tools, self.__button_widgets):
     #         button.setChecked(tool == new_tool)
-    

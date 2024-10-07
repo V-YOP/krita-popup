@@ -27,7 +27,7 @@ class BaseItem(Generic[T], QWidget):
         raise NotImplementedError()
 
     @staticmethod
-    def create(configuration: T) -> 'Self': # type: ignore
+    def create(configuration: T, editing_mode: bool) -> 'Self': # type: ignore
         """
         Create instance by configuration. the client has no need to store the config_id because it's only used for identify configuration and will be given when store config
         

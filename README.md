@@ -11,9 +11,9 @@ This popup is configurable, Many type of widgets can be placed and configured on
 1. [X] Tools
 2. [X] Dockers those krita provided (multiple window support...?)
 3. [x] Brushes
-4. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
-5. [ ] View States, like brush size, flow
-6. [ ] (checkable) Actions like eraser mode, mirror.
+4. [X] Actions (display icon when action has icon, otherwise text)
+5. [ ] Current Layer States, like blending mode, opacity, inherit alpha, locked...
+6. [ ] View States, like brush size, flow
 7. [ ] A minimal tool option which will changes corresponding with current tool (mark: must get the shardtooldocker's widget in `__init__`)
 8. [ ] other resources rather than brushes
 9.  [X] main menu button
@@ -34,7 +34,7 @@ This popup is configurable, Many type of widgets can be placed and configured on
 # TODO
 
 1. [X] Add Widgets in editing mode
-2. [X] Edit item (item specific)
+2. [X] Edit item (item specific) 
 3. [X] custom mask for items
 4. [X] multiple layout 
 5. [X] Fixed item (always displayed at specific locations nomatter where the cursor is)

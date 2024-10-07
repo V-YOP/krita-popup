@@ -31,7 +31,7 @@ class KritaMenuButton(BaseItem[MainMenuButtonConfig]):
         return MainMenuButtonConfig()
     
     @staticmethod
-    def create(conf: MainMenuButtonConfig):
+    def create(conf: MainMenuButtonConfig, editing_mode: bool):
         return KritaMenuButton()
     
     def start_editing(self) -> MainMenuButtonConfig | None:

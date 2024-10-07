@@ -22,10 +22,10 @@ class PopupProvider:
 
         self.__under_cursor_popup = Popup([], under_cursor=True)
         self.__fixed_popup = Popup([], under_cursor=False)
+        self.__current_layout_idx: int | None = None
 
         self.__notifier = Krita.instance().notifier()
         self.__notifier.setActive(True)
-        self.__current_layout_idx: int | None = None
 
         # make sure popup hides when application closing, otherwise it will stay on backgrond and prevent krita from starting...
         self.__notifier.imageClosed.connect(lambda: self.hide_popup())
@@ -43,7 +43,7 @@ class PopupProvider:
         for conf in confs:
             item_type, id, geo = conf['item_type'], conf['id'], conf['geo']
             assert item_type in item_def, f'unknown item type: {item_type}'
-            items.append(ItemInstance(id, conf, item_def[item_type].create(conf['conf']), QRect(*geo)))
+            items.append(ItemInstance(id, conf, item_def[item_type].create(conf['conf'], False), QRect(*geo)))
         return items
 
     def is_popup_visible(self, layout_idx: int | None = None):

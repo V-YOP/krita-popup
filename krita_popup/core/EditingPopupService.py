@@ -54,7 +54,7 @@ class EditingPopupService:
         item_selector = QComboBox(self.__popup)
         item_selector.addItem('--- add item ---')
         item_selector.setCurrentIndex(0)
-        # always display on left side
+        # always display on top left side
         item_entrys = list(item_defs().items())
         for item_name, _ in item_entrys:
             item_selector.addItem(item_name)
@@ -84,7 +84,7 @@ class EditingPopupService:
             config = item_config['conf']
             geo = item_config['geo']
 
-        instance: QWidget = item_type.create(config)
+        instance: QWidget = item_type.create(config, True)
         item_instance = ItemInstance(
             uuid=id,
             config=ItemConfig(

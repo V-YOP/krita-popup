@@ -22,7 +22,7 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
         return KritaDockBorrowerConfig(object_name='KisLayerBox', transparent_background=False)
 
     @staticmethod
-    def create(conf: KritaDockBorrowerConfig):
+    def create(conf: KritaDockBorrowerConfig, editing_mode: bool):
         return KritaDockBorrower(conf)  # type: ignore
     
     def __get_docker_defs(self):
@@ -113,6 +113,7 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
         if not self.__borrowed_widget or not self.__dock_widget:
             return
         self.__dock_widget.setWidget(self.__borrowed_widget)
+        self.__placeholder.setParent(None) # type: ignore
         self.__borrowed_widget = None
         self.__dock_widget = None
 

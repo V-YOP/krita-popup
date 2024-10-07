@@ -70,7 +70,7 @@ class ToolsEditWidget(QWidget):
 
 def exec_editing_dialog(setting: ToolButtonGroupConfig) -> ToolButtonGroupConfig | None:
     dialog = QDialog(None)
-    dialog.resize(600, 800)
+    dialog.resize(1200, 800)
     dialog.setWindowFlag(Qt.WindowStaysOnTopHint, True)
     dialog.raise_()
 
