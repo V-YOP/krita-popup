@@ -35,6 +35,7 @@ class PopupProvider:
             if state == Qt.ApplicationInactive and self.is_popup_visible():
                 self.hide_popup()
         QApplication.instance().applicationStateChanged.connect(state_changed) # type: ignore
+        self.__last_window: str = ''
         
 
     def __create_items_from_configuration(self, window: Window, layout_idx: int):
@@ -53,19 +54,25 @@ class PopupProvider:
             return visible and layout_idx == self.__current_layout_idx
         return visible
 
-    def __init_actions(self):
+    def __init_actions(self, window: Window):
         """
         let the popup can listen shortcut
         """
-        action = Krita.instance().action(TOGGLE_ACTION_ID + str(0))
-        if action is None or action in self.__under_cursor_popup.actions():
+        if window.qwindow().objectName() == self.__last_window:
             return
-        for action in Krita.instance().actions():
+        # when window changed, reset actions
+        for action in self.__under_cursor_popup.actions():
+            self.__under_cursor_popup.removeAction(action)
+            self.__fixed_popup.removeAction(action)
+
+        for action in window.qwindow().actions():
             self.__under_cursor_popup.addAction(action)
             self.__fixed_popup.addAction(action)
+            
+        self.__last_window = window.qwindow().objectName()
 
     def show_popup(self, window: Window, layout_idx: int):
-        self.__init_actions()
+        self.__init_actions(window)
         
         self.__under_cursor_popup.hide()
         self.__under_cursor_popup.clear_items()
@@ -81,7 +88,7 @@ class PopupProvider:
 
         self.__under_cursor_popup.show() # fiexd popup should beyonds to under cursor popup 
         self.__fixed_popup.show()
-        window_object_name = window.objectName()
+        window_object_name = window.qwindow().objectName()
         QTimer.singleShot(0, lambda: QApplication.setActiveWindow(get_window_from_object_name(window_object_name).qwindow())) # re-focus krita window
 
     def hide_popup(self):

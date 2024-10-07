@@ -32,10 +32,8 @@ class Popup(QWidget):
         self.__mask = QRegion()
         for i in items:
             self.add_item(*i)
-        # if not screen:
         screen = QApplication.screenAt(self.pos())
         self.__geo = screen.geometry()
-        print(f'{self.__geo=}')
         self.show()
         self.hide()
         self.refresh_mask()
@@ -95,7 +93,9 @@ class Popup(QWidget):
     
     def show(self):
         if not self.__under_cursor:
-            self.setGeometry(self.__geo)
+            geo = QRect(self.__geo)
+            geo.moveCenter(QApplication.screenAt(QCursor.pos()).geometry().center()) # get che center of screen where the cursor is
+            self.setGeometry(geo)
         else:
             geo = QRect(self.__geo)
             geo.moveCenter(QCursor.pos())

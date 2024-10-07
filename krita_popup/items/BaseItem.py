@@ -31,7 +31,11 @@ class BaseItem(Generic[T], QWidget):
         """
         Create instance by configuration. the client has no need to store the config_id because it's only used for identify configuration and will be given when store config
         
-        configuration: A configuration class
+        ## parameters
+
+        - `configuration`: A configuration class
+        - `window`: The window which user trigger popup on
+        - `editing_mode`: the popup is in editing mode
         """
         raise NotImplementedError()
 

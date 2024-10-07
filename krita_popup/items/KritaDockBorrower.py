@@ -74,7 +74,7 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
 
     def __init__(self, conf: KritaDockBorrowerConfig, window: Window) -> None:
         super().__init__(None)
-        self.__window_object_name = window.objectName()
+        self.__window_object_name = window.qwindow().objectName()
         self.__object_name = conf['object_name']
         self.__transparent_background = conf['transparent_background']
 

@@ -41,7 +41,7 @@ class KritaMenuButton(BaseItem[MainMenuButtonConfig]):
     
     def __init__(self, window: Window) -> None:
         super().__init__(None)
-        self.__window_object_name = window.objectName()
+        self.__window_object_name = window.qwindow().objectName()
 
         self.setLayout(QHBoxLayout())
         self.__button = QPushButton()

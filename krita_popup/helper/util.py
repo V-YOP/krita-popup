@@ -7,8 +7,10 @@ def get_window_from_object_name(window_object_name: str):
     """
     get krita window object from object_name, raise AssertionError if corresponding window does not exist
     """
+    if window_object_name == '':
+        raise AssertionError(f'empty object name given, make sure you are calling `window.qwindow().objectName()` rather than `window.objectName()`')
     for i in Krita.instance().windows():
-        if i.objectName() == window_object_name:
+        if i.qwindow().objectName() == window_object_name:
             return i
     raise AssertionError(f'window "{window_object_name}" not exists')
 
