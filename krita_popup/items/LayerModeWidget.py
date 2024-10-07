@@ -8,7 +8,7 @@ from krita import *
 
 class LayerModeWidget(BaseItem[None]):
     @staticmethod
-    def create(configuration: None, editing_mode: bool) -> 'LayerModeWidget':
+    def create(configuration: None, window: Window, editing_mode: bool) -> 'LayerModeWidget':
         return LayerModeWidget(configuration)
     
     @staticmethod

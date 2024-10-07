@@ -28,15 +28,16 @@ class ActionGroup(BaseItem[ActionGroupConfig]):
         )
     
     @staticmethod
-    def create(conf: ActionGroupConfig, editing_mode: bool):
-        return ActionGroup(conf)  # type: ignore
+    def create(conf: ActionGroupConfig, window: Window, editing_mode: bool):
+        return ActionGroup(conf, window)  # type: ignore
     
-    def __init__(self, config: ActionGroupConfig) -> None:
+    def __init__(self, config: ActionGroupConfig, window: Window) -> None:
         super().__init__()
         self.__config = config
         
-        # TODO: multiple window support: get actions at `on_show` method to get current window's action
-        self.__actions = [Krita.instance().action(i) for i in config['actions']]
+        all_actions = {i.objectName(): i for i in window.qwindow().actions()}
+        self.__actions = [all_actions[i] for i in config['actions'] if i in all_actions]
+
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.__button_widgets: list[QToolButton] = []
         

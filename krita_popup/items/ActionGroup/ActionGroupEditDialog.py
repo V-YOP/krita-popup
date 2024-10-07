@@ -124,10 +124,10 @@ def exec_editing_dialog(setting: ActionGroupConfig) -> ActionGroupConfig | None:
     horizontal_checkbox.setText('Horizontal')
     horizontal_checkbox.setChecked(setting['horizontal'])
 
-    ALL_ICON_ACTIONS = [i for i in Krita.instance().actions() ]
-    ACTION_DICT = {i.objectName(): i for i in ALL_ICON_ACTIONS}
+    all_actions = [i for i in Krita.instance().actions() ]
+    action_dict = {i.objectName(): i for i in all_actions}
 
-    actions_widget = ActionsEditWidget([ACTION_DICT[i] for i in setting['actions']], ALL_ICON_ACTIONS)
+    actions_widget = ActionsEditWidget([action_dict[i] for i in setting['actions']], all_actions)
 
     button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
     button_box.rejected.connect(lambda: dialog.done(0))

@@ -32,7 +32,7 @@ class ToolButtonGroup(BaseItem[ToolButtonGroupConfig]):
         )
     
     @staticmethod
-    def create(conf: ToolButtonGroupConfig, editing_mode: bool):
+    def create(conf: ToolButtonGroupConfig, window: Window, editing_mode: bool):
         return ToolButtonGroup(conf)  # type: ignore
     
     def __init__(self, config: ToolButtonGroupConfig) -> None:

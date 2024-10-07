@@ -3,6 +3,15 @@ from typing import Callable
 from .QtAll import *
 from time import perf_counter
 
+def get_window_from_object_name(window_object_name: str):
+    """
+    get krita window object from object_name, raise AssertionError if corresponding window does not exist
+    """
+    for i in Krita.instance().windows():
+        if i.objectName() == window_object_name:
+            return i
+    raise AssertionError(f'window "{window_object_name}" not exists')
+
 def display_msg_box(text: str, icon: QMessageBox.Icon):
     box = QMessageBox()
     box.setIcon(icon)

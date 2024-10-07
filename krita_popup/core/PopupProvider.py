@@ -1,6 +1,7 @@
 
 from krita import *
 from krita_popup.constants import TOGGLE_ACTION_ID
+from krita_popup.helper.util import get_window_from_object_name
 from .ConfigurationService import ConfigurationService, ItemInstance
 from .EditingPopupService import EditingPopupService
 from krita_popup.helper import singleton
@@ -36,14 +37,14 @@ class PopupProvider:
         QApplication.instance().applicationStateChanged.connect(state_changed) # type: ignore
         
 
-    def __create_items_from_configuration(self, layout_idx: int):
+    def __create_items_from_configuration(self, window: Window, layout_idx: int):
         item_def = item_defs()
         confs = self.__configuration_service.load_item_configs(layout_idx)
         items: list[ItemInstance] = []
         for conf in confs:
             item_type, id, geo = conf['item_type'], conf['id'], conf['geo']
             assert item_type in item_def, f'unknown item type: {item_type}'
-            items.append(ItemInstance(id, conf, item_def[item_type].create(conf['conf'], False), QRect(*geo)))
+            items.append(ItemInstance(id, conf, item_def[item_type].create(conf['conf'], window, False), QRect(*geo)))
         return items
 
     def is_popup_visible(self, layout_idx: int | None = None):
@@ -63,7 +64,7 @@ class PopupProvider:
             self.__under_cursor_popup.addAction(action)
             self.__fixed_popup.addAction(action)
 
-    def show_popup(self, layout_idx: int):
+    def show_popup(self, window: Window, layout_idx: int):
         self.__init_actions()
         
         self.__under_cursor_popup.hide()
@@ -71,7 +72,7 @@ class PopupProvider:
         self.__fixed_popup.hide()
         self.__fixed_popup.clear_items()
         self.__current_layout_idx = layout_idx
-        items = self.__create_items_from_configuration(layout_idx)
+        items = self.__create_items_from_configuration(window, layout_idx)
         for item in items:
             if item.config.get('fixed', False):
                 self.__fixed_popup.add_item(item.widget, item.geo)
@@ -80,7 +81,8 @@ class PopupProvider:
 
         self.__under_cursor_popup.show() # fiexd popup should beyonds to under cursor popup 
         self.__fixed_popup.show()
-        QTimer.singleShot(0, lambda: QApplication.setActiveWindow(Krita.instance().activeWindow().qwindow())) # re-focus krita window
+        window_object_name = window.objectName()
+        QTimer.singleShot(0, lambda: QApplication.setActiveWindow(get_window_from_object_name(window_object_name).qwindow())) # re-focus krita window
 
     def hide_popup(self):
         self.__under_cursor_popup.hide()
@@ -89,13 +91,13 @@ class PopupProvider:
         self.__fixed_popup.clear_items()
         self.__current_layout_idx = None
 
-    def start_editing(self, layout_idx: int):
+    def start_editing(self, window: Window, layout_idx: int):
         """
         Fetch current items, showing editing popup, wait for 
         """
         self.hide_popup() # hide popup first
         
-        items = self.__create_items_from_configuration(layout_idx)
+        items = self.__create_items_from_configuration(window, layout_idx)
         new_items = self.__editing_popup_service.wait_for_done(items)
         if new_items is None:
             return # user click cancel, don't do anything

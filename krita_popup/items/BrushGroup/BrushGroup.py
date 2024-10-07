@@ -33,7 +33,7 @@ class BrushGroup(BaseItem[BrushGroupConfig]):
         )
     
     @staticmethod
-    def create(conf: BrushGroupConfig, editing_mode: bool):
+    def create(conf: BrushGroupConfig, window: Window, editing_mode: bool):
         return BrushGroup(conf)  # type: ignore
     
     def start_editing(self) -> BrushGroupConfig | None:

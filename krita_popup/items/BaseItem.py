@@ -3,7 +3,7 @@ from PyQt5.QtGui import QKeyEvent, QRegion
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import pyqtSignal
 
-from krita import Krita
+from krita import Krita, Window
 
 def false_me() -> None:
     return False # type: ignore
@@ -27,7 +27,7 @@ class BaseItem(Generic[T], QWidget):
         raise NotImplementedError()
 
     @staticmethod
-    def create(configuration: T, editing_mode: bool) -> 'Self': # type: ignore
+    def create(configuration: T, window: Window, editing_mode: bool) -> 'Self': # type: ignore
         """
         Create instance by configuration. the client has no need to store the config_id because it's only used for identify configuration and will be given when store config
         

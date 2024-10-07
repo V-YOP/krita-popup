@@ -9,6 +9,7 @@ from krita import *
 from ._item_gegistry import RegistItem
 from .BaseItem import BaseItem
 from krita_popup.helper.QtAll import *
+from krita_popup.helper.util import get_window_from_object_name
 
 TOOLBUTTON_STYLE = """
 QToolButton {
@@ -31,15 +32,17 @@ class KritaMenuButton(BaseItem[MainMenuButtonConfig]):
         return MainMenuButtonConfig()
     
     @staticmethod
-    def create(conf: MainMenuButtonConfig, editing_mode: bool):
-        return KritaMenuButton()
+    def create(conf: MainMenuButtonConfig, window: Window, editing_mode: bool):
+        return KritaMenuButton(window)
     
     def start_editing(self) -> MainMenuButtonConfig | None:
         # no editing
         return None
     
-    def __init__(self) -> None:
+    def __init__(self, window: Window) -> None:
         super().__init__(None)
+        self.__window_object_name = window.objectName()
+
         self.setLayout(QHBoxLayout())
         self.__button = QPushButton()
         self.layout().addWidget(self.__button)
@@ -58,7 +61,7 @@ class KritaMenuButton(BaseItem[MainMenuButtonConfig]):
         # 获取菜单栏中的菜单项
         menu = QMenu(self)
         # 获取顶级菜单栏中的菜单
-        for action in Krita.instance().activeWindow().qwindow().menuBar().actions():
+        for action in get_window_from_object_name(self.__window_object_name).qwindow().menuBar().actions():
             submenu = action.menu()
             if submenu:
                 # 将顶级菜单栏的菜单添加到按钮点击菜单

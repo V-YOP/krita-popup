@@ -7,6 +7,8 @@ from krita_popup.helper.QtAll import *
 from ._item_gegistry import RegistItem
 from .BaseItem import BaseItem
 
+from krita_popup.helper.util import get_window_from_object_name
+
 class KritaDockBorrowerConfig(TypedDict):
     object_name: str
     transparent_background: bool
@@ -22,8 +24,8 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
         return KritaDockBorrowerConfig(object_name='KisLayerBox', transparent_background=False)
 
     @staticmethod
-    def create(conf: KritaDockBorrowerConfig, editing_mode: bool):
-        return KritaDockBorrower(conf)  # type: ignore
+    def create(conf: KritaDockBorrowerConfig, window: Window, editing_mode: bool):
+        return KritaDockBorrower(conf, window)  # type: ignore
     
     def __get_docker_defs(self):
         """
@@ -70,8 +72,9 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
             transparent_background=transparent_background,
         )
 
-    def __init__(self, conf: KritaDockBorrowerConfig) -> None:
+    def __init__(self, conf: KritaDockBorrowerConfig, window: Window) -> None:
         super().__init__(None)
+        self.__window_object_name = window.objectName()
         self.__object_name = conf['object_name']
         self.__transparent_background = conf['transparent_background']
 
@@ -89,7 +92,7 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
         return super().resizeEvent(a0)
 
     def __get_dock_widget(self):
-        return next(i for i in Krita.instance().dockers() if i.objectName() == self.__object_name)
+        return next(i for i in get_window_from_object_name(self.__window_object_name).dockers() if i.objectName() == self.__object_name)
 
     def borrow(self):
         if self.__borrowed_widget:

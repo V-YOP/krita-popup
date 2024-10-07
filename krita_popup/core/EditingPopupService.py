@@ -8,6 +8,7 @@ from krita_popup.helper.QtAll import *
 from krita_popup.popup import EditingPopup
 from .ConfigurationService import ItemConfig, ItemInstance
 from krita_popup.items import BaseItem, item_defs
+from krita import *
 
 @singleton
 class EditingPopupService:
@@ -84,7 +85,7 @@ class EditingPopupService:
             config = item_config['conf']
             geo = item_config['geo']
 
-        instance: QWidget = item_type.create(config, True)
+        instance: QWidget = item_type.create(config, Krita.instance().activeWindow(), True)
         item_instance = ItemInstance(
             uuid=id,
             config=ItemConfig(
