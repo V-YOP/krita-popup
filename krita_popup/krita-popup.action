@@ -10,7 +10,7 @@
             <iconText></iconText>
             <activationFlags>0</activationFlags>
             <activationConditions>0</activationConditions>
-            <shortcut>`</shortcut>
+            <shortcut></shortcut>
             <isCheckable>false</isCheckable>
             <statusTip/>
         </Action>
@@ -22,7 +22,7 @@
             <iconText></iconText>
             <activationFlags>0</activationFlags>
             <activationConditions>0</activationConditions>
-            <shortcut>CapsLock</shortcut>
+            <shortcut>`</shortcut>
             <isCheckable>false</isCheckable>
             <statusTip/>
         </Action>
@@ -34,7 +34,7 @@
             <iconText></iconText>
             <activationFlags>0</activationFlags>
             <activationConditions>0</activationConditions>
-            <shortcut></shortcut>
+            <shortcut>CapsLock</shortcut>
             <isCheckable>false</isCheckable>
             <statusTip/>
         </Action>

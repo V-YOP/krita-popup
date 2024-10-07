@@ -34,7 +34,7 @@ class BaseItem(Generic[T], QWidget):
         ## parameters
 
         - `configuration`: A configuration class
-        - `window`: The window which user trigger popup on
+        - `window`: The window which user trigger popup on, the instance can cache `window.qwindow().objectName()` for further use.
         - `editing_mode`: the popup is in editing mode
         """
         raise NotImplementedError()
