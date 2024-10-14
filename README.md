@@ -42,4 +42,9 @@ This popup is configurable, Many type of widgets can be placed and configured on
    1. [ ] when cursor is very close to last position when popup is showed (or cursor is on a same item), show popup at the old position
    2. [ ] Add an "alive zone" (corresponding to "deadzone") to popup, limit the center's position
 7. [ ] documentation
+8. [ ] let popup to be current view's children to avoid focus problem ??
 
+# Known Bugs
+
+* layer preview doesn't work when borrowing layers docker on canvas only mode
+ 

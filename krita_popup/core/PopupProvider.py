@@ -73,7 +73,6 @@ class PopupProvider:
 
     def show_popup(self, window: Window, layout_idx: int):
         self.__init_actions(window)
-        
         self.__under_cursor_popup.hide()
         self.__under_cursor_popup.clear_items()
         self.__fixed_popup.hide()
