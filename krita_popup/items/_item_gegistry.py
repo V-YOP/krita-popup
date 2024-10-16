@@ -7,20 +7,18 @@ _items: dict[str, type[BaseItem]] = {}
 
 def RegistItem(name: str):
     """
-    A class decorator for registering items which can be put onto popup, registed class **must inherits from QWidget**
+    A class decorator for registering items which can be put onto popup, registed class **must inherits from BaseItem**
 
     # example:
     ```
     @RegistItem('some widget')
-    class SomeWidget(QWidget, BaseItem):
-        def __init__(self, config: SomeConfig):
-            ...
+    class SomeWidget(BaseItem[...]):
+        ...
     ```
     """
     if name in _items:
         raise RuntimeError(f'duplicate item name {name}')
     def go(registed_class): 
-        assert issubclass(registed_class, QWidget), f'{name} must inherits from QWidget!'
         assert issubclass(registed_class, BaseItem), f'{name} must inherits from BaseItem!'
         _items[name] = registed_class 
         return registed_class

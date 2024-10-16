@@ -6,6 +6,7 @@ from krita import Window
 from itertools import zip_longest
 from .BaseItem import BaseItem
 from ._item_gegistry import RegistItem
+from krita_popup.helper import form
 
 TOOLBUTTON_STYLE = """
 QToolButton {
@@ -45,8 +46,20 @@ class OpacityFlowGroup(BaseItem[OpacityFlowGroupConfig]):
         return OpacityFlowGroup(configuration)
     
     def start_editing(self) -> OpacityFlowGroupConfig | None:
-        # TODO 
-        return None
+        result = form.exec_form_dialog([
+            form.DropdownField(type='dropdown', defaultValue=self.__config['value_type'], label='type', field='value_type', items=['opacity', 'flow']),
+            form.DropdownField(type='dropdown', defaultValue=str(self.__config['level']), label='level', field='level', items=list(map(str, range(6, 20)))),
+            form.DropdownField(type='dropdown', defaultValue=str(self.__config['curve']), label='curve', field='curve', items=['linear', 'quadratic', 'cubic']),
+            form.CheckboxField(type='checkbox', field='horizontal', label='horizontal', items=[''], defaultValue=[''] if self.__config['horizontal'] else []),
+            form.CheckboxField(type='checkbox', field='invert', label='invert', items=[''], defaultValue=[''] if self.__config['invert'] else [])
+        ], True)
+
+        if result is None:
+            return result
+        result['horizontal'] = len(result['horizontal']) != 0 # type: ignore
+        result['invert'] = len(result['invert']) != 0 # type: ignore
+        result['level'] = int(result['level']) # type: ignore
+        return result # type: ignore
 
     def __init__(self, conf: OpacityFlowGroupConfig) -> None:
         super().__init__()
