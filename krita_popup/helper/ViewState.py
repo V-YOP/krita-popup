@@ -12,6 +12,9 @@ class ViewState(QObject):
     provide method and signal about state of views, like Brush Preset, Brush Size, Brush Flow...
     """
     currentBrushChanged = pyqtSignal(Resource, name='currentBrushChanged')
+    """
+    argument: current Brush Preset `Resource`
+    """
 
     def __init__(self) -> None:
         super().__init__()

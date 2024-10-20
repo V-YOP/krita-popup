@@ -6,7 +6,7 @@ from krita import Window
 from itertools import zip_longest
 from .BaseItem import BaseItem
 from ._item_gegistry import RegistItem
-from krita_popup.helper import form
+from krita_popup.helper import ViewState, form
 
 TOOLBUTTON_STYLE = """
 QToolButton {
@@ -64,6 +64,7 @@ class OpacityFlowGroup(BaseItem[OpacityFlowGroupConfig]):
     def __init__(self, conf: OpacityFlowGroupConfig) -> None:
         super().__init__()
         self.__config = conf
+        self.__view_state = ViewState()
         self.setLayout(QHBoxLayout() if self.__config['horizontal'] else QVBoxLayout())
         self.layout().setSpacing(0)
         self.layout().setContentsMargins(0,0,0,0)
@@ -81,7 +82,10 @@ class OpacityFlowGroup(BaseItem[OpacityFlowGroupConfig]):
             self.layout().addWidget(btn)
     
     # def loop_me(self):
-
+    def __on_brush_changed(self, _: Resource): 
+        if not (v := self.__get_current_value()): return
+        for i in self.__value_change_cbs:
+            i(v)
 
     def __level_start_values(self):
         def remap_value(value: float):
@@ -141,3 +145,9 @@ class OpacityFlowGroup(BaseItem[OpacityFlowGroupConfig]):
                 view.setPaintingOpacity(value)
                 return
             view.setPaintingFlow(value)
+
+    def on_show(self):
+        self.__view_state.currentBrushChanged.connect(self.__on_brush_changed)
+    
+    def on_hide(self):
+        self.__view_state.currentBrushChanged.disconnect(self.__on_brush_changed)

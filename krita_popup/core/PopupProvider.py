@@ -29,13 +29,13 @@ class PopupProvider:
         self.__notifier.setActive(True)
 
         # make sure popup hides when application closing, otherwise it will stay on backgrond and prevent krita from starting...
-        self.__notifier.imageClosed.connect(lambda: self.hide_popup())
-        self.__notifier.applicationClosing.connect(lambda: self.hide_popup())
-        def state_changed(state: Qt.ApplicationState):
-            if state == Qt.ApplicationInactive and self.is_popup_visible():
-                self.hide_popup()
-        QApplication.instance().applicationStateChanged.connect(state_changed) # type: ignore
-        self.__last_window: str = ''
+        # self.__notifier.imageClosed.connect(lambda: self.hide_popup())
+        # self.__notifier.applicationClosing.connect(lambda: self.hide_popup())
+        # def state_changed(state: Qt.ApplicationState):
+        #     if state == Qt.ApplicationInactive and self.is_popup_visible():
+        #         self.hide_popup()
+        # QApplication.instance().applicationStateChanged.connect(state_changed) # type: ignore
+        # self.__last_window: str = ''
         
 
     def __create_items_from_configuration(self, window: Window, layout_idx: int):
@@ -58,21 +58,24 @@ class PopupProvider:
         """
         let the popup can listen shortcut
         """
-        if window.qwindow().objectName() == self.__last_window:
-            return
-        # when window changed, reset actions
-        for action in self.__under_cursor_popup.actions():
-            self.__under_cursor_popup.removeAction(action)
-            self.__fixed_popup.removeAction(action)
+        # if window.qwindow().objectName() == self.__last_window:
+        #     return
+        # # when window changed, reset actions
+        # for action in self.__under_cursor_popup.actions():
+        #     self.__under_cursor_popup.removeAction(action)
+        #     self.__fixed_popup.removeAction(action)
 
-        for action in window.qwindow().actions():
-            self.__under_cursor_popup.addAction(action)
-            self.__fixed_popup.addAction(action)
+        # for action in window.qwindow().actions():
+        #     self.__under_cursor_popup.addAction(action)
+        #     self.__fixed_popup.addAction(action)
             
-        self.__last_window = window.qwindow().objectName()
+        # self.__last_window = window.qwindow().objectName()
 
     def show_popup(self, window: Window, layout_idx: int):
         self.__init_actions(window)
+        self.__fixed_popup.setParent(window.qwindow())
+        self.__under_cursor_popup.setParent(window.qwindow())
+
         self.__under_cursor_popup.hide()
         self.__under_cursor_popup.clear_items()
         self.__fixed_popup.hide()
@@ -87,8 +90,8 @@ class PopupProvider:
 
         self.__under_cursor_popup.show() # fiexd popup should beyonds to under cursor popup 
         self.__fixed_popup.show()
-        window_object_name = window.qwindow().objectName()
-        QTimer.singleShot(0, lambda: QApplication.setActiveWindow(get_window_from_object_name(window_object_name).qwindow())) # re-focus krita window
+        # window_object_name = window.qwindow().objectName()
+        # QTimer.singleShot(0, lambda: QApplication.setActiveWindow(get_window_from_object_name(window_object_name).qwindow())) # re-focus krita window
 
     def hide_popup(self):
         self.__under_cursor_popup.hide()
