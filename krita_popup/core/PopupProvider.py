@@ -90,6 +90,8 @@ class PopupProvider:
 
         self.__under_cursor_popup.show() # fiexd popup should beyonds to under cursor popup 
         self.__fixed_popup.show()
+        self.__under_cursor_popup.raise_()
+        self.__fixed_popup.raise_()
         # window_object_name = window.qwindow().objectName()
         # QTimer.singleShot(0, lambda: QApplication.setActiveWindow(get_window_from_object_name(window_object_name).qwindow())) # re-focus krita window
 
