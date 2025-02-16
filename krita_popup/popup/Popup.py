@@ -39,7 +39,7 @@ class Popup(QWidget):
         self.refresh_mask()
     
     def refresh_mask(self):
-        self.__mask = QRegion()
+        self.__mask = QRegion().united(QRect(1,1,1,1))
         for item, _ in self.__items:
             if hasattr(item.wrapped, 'custom_mask') and (res := item.wrapped.custom_mask()) is not NotImplemented and res is not None:
                 region: QRegion = res

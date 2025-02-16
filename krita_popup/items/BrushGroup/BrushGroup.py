@@ -66,14 +66,18 @@ class BrushGroup(BaseItem[BrushGroupConfig]):
                 btn.setChecked(False)
 
     def on_show(self):
-        self.__view_state.currentBrushChanged.connect(self.brush_changed)
+        try:
+            self.__view_state.currentBrushChanged.connect(self.brush_changed)
+        except: pass # ignore exceptions
         if current := self.__view_state.current_brush:
             self.brush_changed(current)
         return super().on_show()
 
     def on_hide(self):
-        self.__view_state.currentBrushChanged.disconnect(self.brush_changed)
-        return super().on_show()
+        try:
+            self.__view_state.currentBrushChanged.disconnect(self.brush_changed)
+        except: pass # ignore exceptions
+        return super().on_hide()
 
     def set_pixmap_transparency(self, pixmap: QPixmap, alpha: float):
         image = pixmap.toImage()
