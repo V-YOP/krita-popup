@@ -98,7 +98,10 @@ class Popup(QWidget):
             self.setGeometry(geo)
         else:
             geo = QRect(self.__geo)
-            geo.moveCenter(QCursor.pos())
+            cursor_pos = QCursor.pos()
+            if self.parentWidget() != None:
+                cursor_pos = self.parentWidget().mapFromGlobal(cursor_pos)
+            geo.moveCenter(cursor_pos)
             self.setGeometry(geo)
         for item, _ in self.__items:
             if hasattr(item.wrapped, 'on_show'):
