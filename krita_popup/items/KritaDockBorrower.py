@@ -100,6 +100,13 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
         
         # do not store dock_widget for possible multiple window
         self.__dock_widget = self.__get_dock_widget()
+
+        # make sure dock widget is visible but can't be seened (layer thumbnail funcion need to be visible)
+        self.__dock_widget.showMinimized()
+        self.__dock_widget.setFloating(True)
+        self.__dock_widget.move(-10000, -10000)
+
+
         self.__borrowed_widget = self.__dock_widget.widget()
 
         if not self.__transparent_background:
@@ -116,6 +123,9 @@ class KritaDockBorrower(BaseItem[KritaDockBorrowerConfig]):
         if not self.__borrowed_widget or not self.__dock_widget:
             return
         self.__dock_widget.setWidget(self.__borrowed_widget)
+
+        self.__dock_widget.hide()
+
         self.__placeholder.setParent(None) # type: ignore
         self.__borrowed_widget = None
         self.__dock_widget = None
