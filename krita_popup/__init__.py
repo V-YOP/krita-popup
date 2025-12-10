@@ -1,2 +1,3 @@
 from krita_popup.KritaPopupExtension import *
 from krita_popup.KritaLayerBlendingModeActionExtension import *
+from krita_popup.ShowToolbarOnCanvasOnlyModeExtension import *

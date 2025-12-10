@@ -18,7 +18,7 @@ class KritaLayerBlendingModeActionExtension(Extension):
 
         for bm in BlendingMode:
             # TODO HARD CODE 
-            if not bm.id in ('darken', 'lighten', 'normal'): continue
+            if not bm in (BlendingMode.DARKER_COLOR, BlendingMode.LIGHTER_COLOR, BlendingMode.NORMAL, BlendingMode.ERASE, BlendingMode.MULTIPLY, BlendingMode.LIGHTEN, BlendingMode.DODGE): continue
             action = window.createAction(f'layer_{bm.id}_blending_mode', f'Layer {bm.en_name} Blending Mode', 'tools/layer_blending_modes/')
             action.triggered.connect(partial(self.set_current_layer_blending_mode, bm))
     
