@@ -9,13 +9,10 @@ TOOLBUTTON_STYLE = """
 QToolButton {
     width: 32px;
     height: 32px;
-    background-color: #31363b;
 }
 QToolButton:checked {
-    background-color: #647c91;
 }
 """.strip()
-
 
 
 @RegistItem('Action Group')
@@ -72,7 +69,7 @@ class ActionGroup(BaseItem[ActionGroupConfig]):
 
         btn.setToolTip(action.toolTip())
         if action.icon().isNull():
-            btn.setText(action.objectName())
+            btn.setText(action.text())
         else:
             btn.setIcon(action.icon())
             # when resize, set icon to my size 80%

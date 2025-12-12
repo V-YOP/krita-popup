@@ -15,15 +15,16 @@ class KritaPopupExtension(Extension):
         pass
 
     def createActions(self, window):
-        # when view_show_canvas_only is triggered to True, set BrushesAndStuff to True
+        """when view_show_canvas_only is set to True, set BrushesAndStuff to True"""
         window_identifier = window.qwindow().objectName()
-        
+
+        # execution must be delayed because BrushAndStuff action is dynamicly added
         @partial(QTimer.singleShot, 0)
         def _():
+            # the former window is destroyed at this moment
             window = next(i for i in Krita.instance().windows() if i.qwindow().objectName() == window_identifier)
             canvas_only_action, toolbar_action = None, None
             for action in window.qwindow().actions():
-                print('fff', action.objectName())
                 if action.objectName() == 'view_show_canvas_only':
                     canvas_only_action = action
                 if action.objectName() == 'BrushesAndStuff':
@@ -35,8 +36,7 @@ class KritaPopupExtension(Extension):
 
             @canvas_only_action.triggered.connect
             def _(checked):
-                if not checked: return
-                if not toolbar_action.isChecked(): 
+                if checked and not toolbar_action.isChecked(): 
                     toolbar_action.setChecked(True)
 
     
