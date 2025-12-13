@@ -66,14 +66,14 @@ class ViewState(QObject):
 
     @property
     def current_layer_blending_mode(self):
-        if not (document := Krita.instance().activeDocument()):
+        if not (document := Krita.instance().activeDocument()) or not (node := document.activeNode()):
             return None
-        return BlendingMode.by_id(document.activeNode().blendingMode())
+        return BlendingMode.by_id(node.blendingMode())
 
     @current_layer_blending_mode.setter
     def current_layer_blending_mode(self, new_blending_mode: BlendingMode):
-        if not (document := Krita.instance().activeDocument()):
+        if not (document := Krita.instance().activeDocument()) or not (node := document.activeNode()):
             return None
-        document.activeNode().setBlendingMode(new_blending_mode.id)
+        node.setBlendingMode(new_blending_mode.id)
 
 ViewState()
