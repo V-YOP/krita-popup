@@ -1,1 +1,4 @@
 TOGGLE_ACTION_ID = 'krita_popup_toggle'
+
+POPUP_NUM = 10 # 0-9
+HOLD_THRESHOLD_MS = 100

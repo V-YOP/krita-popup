@@ -33,7 +33,8 @@ class BlendingMode(Enum):
     EASY_BURN                       = ('easy burn', 'Darken', '变暗', 'Easy Burn', '平缓加深')
 
     DODGE                           = ('dodge', 'Lighten', '变亮', 'Color Dodge', '颜色减淡')
-    ADD                             = ('add', 'Lighten', '变亮', 'Linear Dodge', '线性减淡 = 添加 = 相加')
+    ADD                             = ('add', 'Lighten', '变亮', 'Add', '相加')
+    LINEAR_DODGE                    = ('linear_dodge', 'Lighten', '变亮', 'Linear Dodge', '线性减淡')
     LIGHTEN                         = ('lighten', 'Lighten', '变亮', 'Lighten', '变亮')
     LINEAR_LIGHT                    = ('linear light', 'Lighten', '变亮', 'Linear Light', '线性光 = 图章')
     SCREEN                          = ('screen', 'Lighten', '变亮', 'Screen', '滤色')
